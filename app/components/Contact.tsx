@@ -89,7 +89,7 @@ export default function Contact() {
 
       {/* footer bar */}
       <footer className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-sm text-faint sm:flex-row">
-        <p>© {new Date().getFullYear()} Хулан — Full-Stack Engineer</p>
+        <p>© {new Date().getFullYear()}  Full-Stack Engineer</p>
         <div className="flex items-center gap-5">
           <a href={links.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-text">
             GitHub <ArrowUpRight className="h-3.5 w-3.5" />

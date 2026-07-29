@@ -61,10 +61,7 @@ export default function Hero() {
 
       {/* Name — kept modest, as an eyebrow */}
       <div className="hero-eyebrow mt-8 overflow-hidden">
-        <p className="font-display text-sm uppercase tracking-[0.35em] text-muted md:text-base">
-          Намайг{" "}
-          <span className="text-text">Хулан</span> гэдэг
-        </p>
+       
       </div>
 
       {/* Headline — the role is the focal point */}

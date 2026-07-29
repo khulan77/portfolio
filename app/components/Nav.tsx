@@ -42,11 +42,11 @@ export default function Nav() {
       >
         <a href="#top" className="group flex items-center gap-2.5">
           <span className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet to-cyan font-display text-sm font-bold text-[#05060a]">
-            Х
+            K
           </span>
           <span className="font-display text-sm font-semibold tracking-tight">
-            khulan
-            <span className="text-cyan">.dev</span>
+            dev
+            <span className="text-cyan">.code</span>
           </span>
         </a>
 
