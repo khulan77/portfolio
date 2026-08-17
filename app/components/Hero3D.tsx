@@ -4,9 +4,43 @@ import { useRef, useMemo, useState } from "react";
 import { Canvas, useFrame, type ThreeElements } from "@react-three/fiber";
 import { Float, Icosahedron, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
+import { useTheme } from "../lib/theme";
+
+/**
+ * The scene sits on the page background, so its palette has to follow the
+ * theme — on the light background the dark-mode glow simply disappears.
+ */
+const PALETTES = {
+  dark: {
+    core: "#8b74ff",
+    emissive: "#3a1f8f",
+    emissiveIntensity: 0.5,
+    wire: "#34e0e8",
+    wireOpacity: 0.18,
+    particles: "#aab0ff",
+    particleOpacity: 0.7,
+    lightA: "#8b74ff",
+    lightB: "#34e0e8",
+    ambient: 0.5,
+  },
+  light: {
+    core: "#6a4bff",
+    emissive: "#2a1a7a",
+    emissiveIntensity: 0.2,
+    wire: "#0d8ea3",
+    wireOpacity: 0.35,
+    particles: "#6b62c4",
+    particleOpacity: 0.5,
+    lightA: "#ffffff",
+    lightB: "#7bd9e4",
+    ambient: 1.1,
+  },
+} as const;
+
+type Palette = (typeof PALETTES)[keyof typeof PALETTES];
 
 /** Central morphing crystal built from two overlaid icosahedrons. */
-function Crystal(props: ThreeElements["group"]) {
+function Crystal({ palette, ...props }: ThreeElements["group"] & { palette: Palette }) {
   const inner = useRef<THREE.Mesh>(null);
   const wire = useRef<THREE.Mesh>(null);
 
@@ -27,9 +61,9 @@ function Crystal(props: ThreeElements["group"]) {
       {/* Solid distorting core — modest detail keeps the vertex shader cheap */}
       <Icosahedron ref={inner} args={[1.15, 3]}>
         <MeshDistortMaterial
-          color="#8b74ff"
-          emissive="#3a1f8f"
-          emissiveIntensity={0.5}
+          color={palette.core}
+          emissive={palette.emissive}
+          emissiveIntensity={palette.emissiveIntensity}
           roughness={0.2}
           metalness={0.85}
           distort={0.38}
@@ -39,22 +73,48 @@ function Crystal(props: ThreeElements["group"]) {
 
       {/* Wireframe shell */}
       <Icosahedron ref={wire} args={[1.55, 1]}>
-        <meshBasicMaterial color="#34e0e8" wireframe transparent opacity={0.18} />
+        <meshBasicMaterial
+          color={palette.wire}
+          wireframe
+          transparent
+          opacity={palette.wireOpacity}
+        />
       </Icosahedron>
     </group>
   );
 }
 
+/**
+ * Deterministic PRNG (mulberry32) — the particle cloud must look identical on
+ * every render, so seeding it beats `Math.random()` here.
+ */
+function seededRandom(seed: number) {
+  let state = seed;
+  return () => {
+    state = (state + 0x6d2b79f5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 /** Slowly drifting particle field surrounding the crystal. */
-function Particles({ count = 1200 }: { count?: number }) {
+function Particles({
+  palette,
+  count = 1200,
+}: {
+  palette: Palette;
+  count?: number;
+}) {
   const ref = useRef<THREE.Points>(null);
 
   const positions = useMemo(() => {
+    const random = seededRandom(0x5eed);
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const r = 3.2 + Math.random() * 5.5;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 3.2 + random() * 5.5;
+      const theta = random() * Math.PI * 2;
+      const phi = Math.acos(2 * random() - 1);
       arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       arr[i * 3 + 2] = r * Math.cos(phi);
@@ -77,9 +137,9 @@ function Particles({ count = 1200 }: { count?: number }) {
       </bufferGeometry>
       <pointsMaterial
         size={0.022}
-        color="#aab0ff"
+        color={palette.particles}
         transparent
-        opacity={0.7}
+        opacity={palette.particleOpacity}
         sizeAttenuation
         depthWrite={false}
       />
@@ -112,11 +172,19 @@ function ParallaxRig({ children }: { children: React.ReactNode }) {
 
 export default function Hero3D({ active = true }: { active?: boolean }) {
   const [failed, setFailed] = useState(false);
+  const theme = useTheme();
+  const palette = PALETTES[theme];
 
   if (failed) {
     return (
-      <div className="absolute inset-0 -z-10 opacity-70">
-        <div className="absolute left-1/2 top-1/2 h-[42vmin] w-[42vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(139,116,255,0.55),transparent_65%)] blur-2xl animate-pulse" />
+      <div className="absolute inset-0 -z-10 opacity-70" aria-hidden>
+        <div
+          className="absolute left-1/2 top-1/2 h-[42vmin] w-[42vmin] -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full blur-2xl"
+          style={{
+            background:
+              "radial-gradient(circle, var(--accent-soft), transparent 65%)",
+          }}
+        />
       </div>
     );
   }
@@ -135,15 +203,15 @@ export default function Hero3D({ active = true }: { active?: boolean }) {
       onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       onError={() => setFailed(true)}
     >
-      <ambientLight intensity={0.5} />
-      <pointLight position={[5, 5, 5]} intensity={80} color="#8b74ff" />
-      <pointLight position={[-6, -3, 2]} intensity={55} color="#34e0e8" />
+      <ambientLight intensity={palette.ambient} />
+      <pointLight position={[5, 5, 5]} intensity={80} color={palette.lightA} />
+      <pointLight position={[-6, -3, 2]} intensity={55} color={palette.lightB} />
 
       <ParallaxRig>
         <Float speed={1.2} rotationIntensity={0.4} floatIntensity={0.7}>
-          <Crystal />
+          <Crystal palette={palette} />
         </Float>
-        <Particles />
+        <Particles palette={palette} />
       </ParallaxRig>
     </Canvas>
   );

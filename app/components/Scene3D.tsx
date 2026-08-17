@@ -8,7 +8,12 @@ const Hero3D = dynamic(() => import("./Hero3D"), {
   ssr: false,
   loading: () => (
     <div className="absolute inset-0 -z-10">
-      <div className="absolute left-1/2 top-1/2 h-[40vmin] w-[40vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(139,116,255,0.4),transparent_65%)] blur-2xl" />
+      <div
+        className="absolute left-1/2 top-1/2 h-[40vmin] w-[40vmin] -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
+        style={{
+          background: "radial-gradient(circle, var(--accent-soft), transparent 65%)",
+        }}
+      />
     </div>
   ),
 });

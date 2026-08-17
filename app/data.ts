@@ -7,6 +7,17 @@ export const links = {
   phoneDisplay: "+976 8556 3793",
 };
 
+export const profile = {
+  name: "Хулан",
+  logoMark: "K",
+  brand: "dev",
+  brandAccent: ".code",
+  role: "Full-Stack Software Engineer",
+  school: "Pinecone Academy",
+  tagline:
+    "Санаанаас эхлээд өгөгдлийн сан, интерфейс, deploy хүртэлх бүх шатыг бие даан бүтээдэг.",
+};
+
 export type SkillGroup = {
   id: string;
   title: string;
@@ -161,7 +172,7 @@ export const projects: Project[] = [
   },
   {
     title: "Зөв Бичих Аварга — Сургалтын Платформ",
-    year: "2025",
+    year: "2026",
     description:
       "1-5-р ангийн хүүхдийн зөв бичих чадварыг сайжруулах, цээж бичгийн тоглоомт систем. Glassmorphism бүхий хөөрхөн UI, анги бүрд зориулсан 'Арал'-ууд, Хөнгөн/Дунд/Хэцүү үе шат, Leaderboard болон аватар сонголттой интерактив UX.",
     tech: [
@@ -179,7 +190,7 @@ export const projects: Project[] = [
   },
   {
     title: "Full-Stack Auth & Database Synchronizer",
-    year: "2025",
+    year: "2026",
     description:
       "Next.js болон Express.js архитектуртай Full-stack апп. Clerk Webhooks ашиглан хэрэглэгчийн бүртгэлийг PostgreSQL-тэй бодит цагт синхрончилж, аюулгүй байдлыг хангасан. CORS, Middleware хамгаалалт, Frontend-Backend хоорондын аюулгүй өгөгдөл дамжуулалтыг бие даан шийдсэн.",
     tech: [
@@ -280,8 +291,66 @@ export const projects: Project[] = [
   },
 ];
 
+/** Counted from the real lists so the numbers can never drift out of date. */
+const techCount = skills.reduce((total, group) => total + group.items.length, 0);
+
 export const stats = [
-  { value: 10, suffix: "+", label: "Deploy хийсэн төсөл" },
-  { value: 30, suffix: "+", label: "Эзэмшсэн технологи" },
-  { value: 100, suffix: "%", label: "Бие даасан Full-Stack" },
+  { value: projects.length, suffix: "", label: "Deploy хийсэн төсөл" },
+  { value: techCount, suffix: "+", label: "Ашигладаг технологи" },
+  { value: 2, suffix: "-р байр", label: "PineQuest тэмцээн" },
+];
+
+export type Highlight = {
+  id: string;
+  title: string;
+  body: string;
+};
+
+export const highlights: Highlight[] = [
+  {
+    id: "endtoend",
+    title: "Санаанаас deploy хүртэл",
+    body: "Дизайн, frontend, backend, өгөгдлийн сан, байршуулалт — бүх шатыг ганцаараа хөтөлж, ажиллаж байгаа бүтээгдэхүүн болгож өгдөг.",
+  },
+  {
+    id: "craft",
+    title: "Нарийн ширийг тооцсон хэрэгжүүлэлт",
+    body: "Ачаалах хурд, гар утасны харагдац, гарын товчлуураар ажиллах хүртээмжийг эхнээс нь бодож бүтээдэг.",
+  },
+  {
+    id: "motion",
+    title: "Хөдөлгөөн ба 3D",
+    body: "GSAP, Three.js, Framer Motion-оор интерфейст амь оруулж, гүйцэтгэлийг нь алдагдуулахгүйгээр тэнцвэржүүлдэг.",
+  },
+];
+
+export type TimelineItem = {
+  year: string;
+  title: string;
+  detail: string;
+  icon: "trophy" | "school" | "code";
+};
+
+export const timeline: TimelineItem[] = [
+  {
+    year: "2026",
+    title: "PineQuest — 2-р байр",
+    detail:
+      "Joy Learn төслөө 5 компанийн шүүгчийн өмнө хамгаалж, багаараа 2-р байр болон 2,000,000₮-ийн шагнал хүртсэн.",
+    icon: "trophy",
+  },
+  {
+    year: "2026",
+    title: "Pinecone Academy — Software Engineer",
+    detail:
+      "Full-Stack хөгжүүлэлтийн эрчимжүүлсэн хөтөлбөрийг төгсөж, багийн орчинд бодит бүтээгдэхүүн хүргэх туршлага хуримтлуулсан.",
+    icon: "school",
+  },
+  {
+    year: "2026",
+    title: "Бие даасан хөгжүүлэлт",
+    detail:
+      "Next.js, TypeScript, PostgreSQL экосистемд олон төсөл бүтээж, production-д байршуулж туршлагаа гүнзгийрүүлсэн.",
+    icon: "code",
+  },
 ];

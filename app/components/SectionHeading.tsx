@@ -11,10 +11,10 @@ export default function SectionHeading({
 }) {
   return (
     <Reveal className="mb-12 md:mb-16" stagger>
-      <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-cyan">
+      <div className="eyebrow flex items-center gap-3 text-accent-2">
         <span className="font-display">{index}</span>
-        <span className="h-px w-10 bg-gradient-to-r from-cyan to-transparent" />
-        {kicker && <span className="text-muted">{kicker}</span>}
+        <span className="h-px w-10 bg-linear-to-r from-accent-2 to-transparent" />
+        {kicker && <span className="text-faint">{kicker}</span>}
       </div>
       <h2 className="font-display mt-4 text-3xl font-bold tracking-tight md:text-5xl">
         {title}

@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
+import { THEME_BOOT_SCRIPT } from "./lib/theme-script";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space",
@@ -41,6 +42,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f6f9" },
+    { media: "(prefers-color-scheme: dark)", color: "#07080c" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -52,7 +60,14 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {/* Sets data-theme before the page paints — must stay first in <body>. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+        <a href="#main" className="skip-link">
+          Үндсэн агуулга руу шилжих
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

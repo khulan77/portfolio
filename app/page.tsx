@@ -5,6 +5,7 @@ import Ambient from "./components/Ambient";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Marquee from "./components/Marquee";
+import About from "./components/About";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
@@ -20,9 +21,10 @@ export default function Portfolio() {
 
       <Nav />
 
-      <main className="relative">
+      <main id="main" className="relative">
         <Hero />
         <Marquee />
+        <About />
         <Skills />
         <Projects />
         <Contact />

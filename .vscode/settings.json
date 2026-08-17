@@ -1,0 +1,6 @@
+{
+  "// tailwind": "VSCode's built-in CSS linter predates Tailwind v4's at-rules (@theme, @custom-variant, @apply, @utility), so it flags them as unknown. They compile fine — silence the false positives.",
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore"
+}

@@ -62,7 +62,7 @@ export default function Preloader() {
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-bg"
     >
       <div className="overflow-hidden">
-        <div className="pl-name font-display text-sm uppercase tracking-[0.4em] text-cyan">
+        <div className="pl-name font-display text-sm uppercase tracking-[0.4em] text-accent-2">
           khulan.dev
         </div>
       </div>
@@ -73,7 +73,7 @@ export default function Preloader() {
         </div>
       </div>
       <div className="pl-bar-wrap mt-8 h-px w-56 overflow-hidden bg-border">
-        <div className="pl-bar h-full origin-left scale-x-0 bg-gradient-to-r from-violet via-cyan to-magenta" />
+        <div className="pl-bar h-full origin-left scale-x-0 bg-linear-to-r from-accent via-accent-2 to-accent-3" />
       </div>
     </div>
   );
