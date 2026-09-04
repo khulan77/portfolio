@@ -1,79 +1,96 @@
-import { Code2, GraduationCap, Trophy } from "lucide-react";
-import SectionHeading from "./SectionHeading";
+import Image from "next/image";
 import Reveal from "./Reveal";
-import SpotlightCard from "./SpotlightCard";
-import { highlights, profile, timeline } from "../data";
+import SectionHead from "./SectionHead";
+import { brand } from "../data/profile";
+import { journey } from "../data/journey";
 
-const TIMELINE_ICONS = {
-  trophy: Trophy,
-  school: GraduationCap,
-  code: Code2,
-} as const;
-
-export default function About() {
+export default function About({ index }: { index: string }) {
   return (
     <section
       id="about"
-      className="relative mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-32"
+      className="mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
     >
-      <SectionHeading index="01" kicker="About" title="Намайг товчхон" />
+      <SectionHead
+        index={index}
+        name="About"
+        title="Хамгийн хэцүү хэсэг нь код байгаагүй."
+        meta={`${brand.school} · ${brand.program}`}
+      />
 
-      <div className="grid gap-12 md:grid-cols-2 md:gap-16">
-        {/* Left — the pitch */}
-        <div>
+      <div className="mt-14 grid gap-10 md:grid-cols-12 md:gap-16">
+        <div className="md:col-span-7">
           <Reveal>
-            <p className="text-balance text-xl font-medium leading-relaxed md:text-2xl">
-              {profile.tagline}
+            <p className="text-lg leading-relaxed text-ink-2 md:text-xl">
+              Асуудлыг нь буруу ойлгочихвол хэчнээн цэвэрхэн код бичсэн ч
+              хамаагүй болдог. Тиймээс одоо эхлээд{" "}
+              <span className="text-ink">асуултаа зөв тавихад</span> л хамгийн
+              их цагаа зарцуулдаг.
             </p>
-          </Reveal>
 
-          <Reveal className="mt-8 flex flex-col gap-6" stagger>
-            {highlights.map((item, i) => (
-              <div key={item.id} className="flex gap-4">
-                <span className="font-display mt-0.5 text-sm font-bold text-accent tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3 className="font-display text-base font-semibold">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted">
-                    {item.body}
-                  </p>
-                </div>
-              </div>
-            ))}
+            <p className="mt-6 text-[0.9375rem] leading-relaxed text-ink-2">
+              Ихэвчлэн бүтэн системийг ганцаараа барьдаг — дизайн, өгөгдлийн
+              сан, API, deploy. Хамгийн урт бодогддог хэсэг нь ихэнхдээ хамгийн
+              жижиг нь байдаг: Lumière дээр хоёр хүн яг нэг зэрэг ижил цагийг
+              дарвал юу болох вэ гэдгийг шийдэх нь бүх интерфейсээс илүү цаг
+              авсан.
+            </p>
           </Reveal>
         </div>
 
-        {/* Right — the track record */}
-        <Reveal className="flex flex-col gap-3" stagger>
-          {timeline.map((item) => {
-            const Icon = TIMELINE_ICONS[item.icon];
-            return (
-              <SpotlightCard
-                key={item.title}
-                className="group flex gap-4 rounded-2xl border border-border bg-bg-soft p-5 md:p-6"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-accent transition-colors group-hover:text-accent-2">
-                  <Icon className="h-4.5 w-4.5" />
-                </span>
-                <div>
-                  <span className="font-display text-xs font-semibold tracking-wide text-faint">
-                    {item.year}
-                  </span>
-                  <h3 className="font-display mt-0.5 text-base font-semibold">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {item.detail}
-                  </p>
-                </div>
-              </SpotlightCard>
-            );
-          })}
+        {/* Education, given the weight of a credential rather than a bullet */}
+        <Reveal className="md:col-span-5">
+          <div className="flex items-center gap-4 border border-line bg-bg-2 p-6">
+            {/* The artwork carries its own black tile, so it is placed as
+                supplied — never recoloured, never cropped. */}
+            <Image
+              src="/pinecone-academy.png"
+              alt="Pinecone Academy"
+              width={256}
+              height={256}
+              sizes="56px"
+              className="h-14 w-14 shrink-0 border border-line"
+            />
+            <div>
+              <div className="label">Education</div>
+              <div className="display mt-1.5 text-lg leading-tight">
+                {brand.school}
+              </div>
+              <div className="mono mt-1 text-xs text-ink-2">
+                {brand.program}
+              </div>
+            </div>
+          </div>
         </Reveal>
       </div>
+
+      {/* The journey, folded in as a single rail rather than its own section */}
+      <Reveal className="mt-20 border-t border-line pt-8">
+        <div className="label flex items-center justify-between">
+          <span>The journey</span>
+          <span className="hidden sm:block">Learning → Products</span>
+        </div>
+
+        <ol className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
+          {journey.map((stage, i) => (
+            <li key={stage.id} className="group">
+              {/* node + connector, forming one continuous line across the row */}
+              <div className="flex items-center gap-2" aria-hidden>
+                <span
+                  className="h-1.5 w-1.5 shrink-0 bg-signal transition-transform duration-500 group-hover:scale-150"
+                  style={{ opacity: 0.45 + (i / (journey.length - 1)) * 0.55 }}
+                />
+                <span className="h-px flex-1 bg-line" />
+              </div>
+
+              <div className="label mt-4">{String(i + 1).padStart(2, "0")}</div>
+              <h3 className="display mt-1 text-base">{stage.label}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-ink-3">
+                {stage.body}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
     </section>
   );
 }

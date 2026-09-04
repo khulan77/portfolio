@@ -1,33 +1,37 @@
 import Preloader from "./components/Preloader";
-import SmoothScroll from "./components/SmoothScroll";
-import Cursor from "./components/Cursor";
-import Ambient from "./components/Ambient";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
-import Marquee from "./components/Marquee";
+import Work from "./components/Work";
 import About from "./components/About";
-import Skills from "./components/Skills";
-import Projects from "./components/Projects";
+import AiSoftware from "./components/AiSoftware";
+import Thesis from "./components/Thesis";
+import Stack from "./components/Stack";
+import Process from "./components/Process";
 import Contact from "./components/Contact";
 
-export default function Portfolio() {
+/**
+ * Section numbers live here rather than inside each section, so hiding or
+ * restoring one renumbers the page instead of leaving a gap in the sequence.
+ *
+ * Currently parked, with their data and components intact:
+ *   Engineering  (app/components/Engineering.tsx, data in app/data/systems.ts)
+ *   Services     (app/components/Services.tsx,    data in app/data/services.ts)
+ * To bring one back, import it, drop it into the order below, and renumber.
+ */
+export default function Home() {
   return (
     <>
       <Preloader />
-      <SmoothScroll />
-      <Cursor />
-      <Ambient />
-      <div className="noise" aria-hidden />
-
       <Nav />
-
       <main id="main" className="relative">
         <Hero />
-        <Marquee />
-        <About />
-        <Skills />
-        <Projects />
-        <Contact />
+        <Work index="01" />
+        <About index="02" />
+        <Stack index="03" />
+        <Thesis />
+        <AiSoftware index="04" />
+        <Process index="05" />
+        <Contact index="06" />
       </main>
     </>
   );

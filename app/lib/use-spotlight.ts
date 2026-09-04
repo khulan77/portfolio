@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, type ReactNode } from "react";
+import { useCallback, useRef } from "react";
 
 /**
  * Writes the pointer position into `--mx`/`--my` on the element so the
@@ -19,21 +19,4 @@ export function useSpotlight<T extends HTMLElement>() {
   }, []);
 
   return { ref, onPointerMove };
-}
-
-/** Ready-made spotlight surface for the plain (server-rendered) cards. */
-export default function SpotlightCard({
-  children,
-  className = "",
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  const { ref, onPointerMove } = useSpotlight<HTMLDivElement>();
-
-  return (
-    <div ref={ref} onPointerMove={onPointerMove} className={`spotlight ${className}`}>
-      {children}
-    </div>
-  );
 }

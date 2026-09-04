@@ -9,9 +9,8 @@ type ViewTransitionDocument = Document & {
 };
 
 /**
- * Light/dark switch. The icons are swapped in pure CSS off `[data-theme]`,
- * so the button renders identically on the server and the client — no
- * hydration mismatch and no icon flicker on load.
+ * Icons swap in pure CSS off `[data-theme]`, so the button renders identically
+ * on the server and the client — no hydration mismatch, no icon flicker.
  */
 export default function ThemeToggle({ className = "" }: { className?: string }) {
   const button = useRef<HTMLButtonElement>(null);
@@ -39,24 +38,21 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (!doc.startViewTransition || reduced) {
-      // Flip every token at once instead of letting each element ease
-      // independently, which reads as a smear.
       document.documentElement.classList.add("theme-switching");
       applyTheme(next);
       window.setTimeout(
         () => document.documentElement.classList.remove("theme-switching"),
-        60
+        60,
       );
       return;
     }
 
-    // Circular wipe out of the button.
     const rect = button.current?.getBoundingClientRect();
     const x = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
     const y = rect ? rect.top + rect.height / 2 : 0;
     const radius = Math.hypot(
       Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
+      Math.max(y, window.innerHeight - y),
     );
 
     const transition = doc.startViewTransition(() => applyTheme(next));
@@ -72,7 +68,7 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
           duration: 600,
           easing: "cubic-bezier(0.22, 1, 0.36, 1)",
           pseudoElement: "::view-transition-new(root)",
-        }
+        },
       );
     });
   }, []);
@@ -82,12 +78,12 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
       ref={button}
       type="button"
       onClick={toggle}
-      aria-label="Гэрэл / харанхуй горим солих"
-      title="Гэрэл / харанхуй горим солих"
-      className={`relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-border-strong hover:text-text ${className}`}
+      aria-label="Toggle light / dark"
+      title="Toggle light / dark"
+      className={`inline-flex h-9 w-9 items-center justify-center border border-line text-ink-3 transition-colors hover:border-line-strong hover:text-ink ${className}`}
     >
-      <Sun className="hidden h-4 w-4 dark:block" />
-      <Moon className="block h-4 w-4 dark:hidden" />
+      <Sun className="hidden h-3.5 w-3.5 dark:block" />
+      <Moon className="block h-3.5 w-3.5 dark:hidden" />
     </button>
   );
 }

@@ -2,21 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import GithubIcon from "./GithubIcon";
+import Mark from "./Mark";
 import ThemeToggle from "./ThemeToggle";
-import { links, profile } from "../data";
+import { activeSocials } from "../data/profile";
 
 const NAV_ITEMS = [
-  { label: "Танилцуулга", href: "#about" },
-  { label: "Ур чадвар", href: "#skills" },
-  { label: "Төслүүд", href: "#projects" },
-  { label: "Холбоо барих", href: "#contact" },
+  { label: "Work", href: "#work" },
+  { label: "About", href: "#about" },
+  { label: "Stack", href: "#stack" },
+  { label: "Contact", href: "#contact" },
+];
+
+/** The overlay carries the full map; the bar stays deliberately short. */
+const MENU_ITEMS = [
+  { label: "Work", href: "#work", meta: "01" },
+  { label: "About", href: "#about", meta: "02" },
+  { label: "Stack", href: "#stack", meta: "03" },
+  { label: "AI × Software", href: "#ai", meta: "04" },
+  { label: "Process", href: "#process", meta: "05" },
+  { label: "Contact", href: "#contact", meta: "06" },
 ];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState<string>("");
+  const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
 
   const { scrollYProgress } = useScroll();
@@ -26,27 +35,23 @@ export default function Nav() {
     mass: 0.3,
   });
 
-  // Condense the bar after the first scroll, and light up the section the
-  // reader is currently in.
   useEffect(() => {
     const sections = NAV_ITEMS.map((item) =>
-      document.querySelector<HTMLElement>(item.href)
+      document.querySelector<HTMLElement>(item.href),
     );
 
     let frame = 0;
     const update = () => {
       frame = 0;
       setScrolled(window.scrollY > 24);
-
       let current = "";
       sections.forEach((section, i) => {
-        if (section && section.getBoundingClientRect().top <= 140) {
+        if (section && section.getBoundingClientRect().top <= 160) {
           current = NAV_ITEMS[i].href;
         }
       });
       setActive(current);
     };
-
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
     };
@@ -59,7 +64,6 @@ export default function Nav() {
     };
   }, []);
 
-  // Lock the page behind the mobile sheet.
   useEffect(() => {
     if (!open) return;
     const previous = document.body.style.overflow;
@@ -74,110 +78,128 @@ export default function Nav() {
 
   return (
     <motion.header
-      initial={{ y: -80, opacity: 0 }}
+      initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
       className="fixed inset-x-0 top-0 z-50"
     >
       <div
-        className={`mx-auto flex max-w-6xl items-center justify-between px-5 transition-all duration-500 md:px-8 ${
-          scrolled ? "glass my-3 rounded-full py-2.5 shadow-[var(--shadow-md)]" : "my-4 py-2.5"
+        className={`transition-colors duration-500 ${
+          scrolled
+            ? "border-b border-line bg-bg/80 backdrop-blur-xl"
+            : "border-b border-transparent"
         }`}
       >
-        <a href="#top" className="group flex items-center gap-2.5" aria-label="Эхлэл">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-2 font-display text-sm font-bold text-on-accent">
-            {profile.logoMark}
-          </span>
-          <span className="font-display text-sm font-semibold tracking-tight">
-            {profile.brand}
-            <span className="text-accent">{profile.brandAccent}</span>
-          </span>
-        </a>
-
-        <nav className="hidden items-center gap-0.5 md:flex" aria-label="Үндсэн цэс">
-          {NAV_ITEMS.map((item) => {
-            const isActive = active === item.href;
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                aria-current={isActive ? "true" : undefined}
-                className={`relative rounded-full px-3.5 py-2 text-sm transition-colors ${
-                  isActive ? "text-text" : "text-muted hover:text-text"
-                }`}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-active"
-                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                    className="absolute inset-0 -z-10 rounded-full bg-surface-2"
-                  />
-                )}
-                {item.label}
-              </a>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <a
-            href={links.github}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-text transition-colors hover:border-border-strong hover:bg-surface-2 sm:inline-flex"
-          >
-            <GithubIcon className="h-4 w-4" /> GitHub
+        <div className="mx-auto flex max-w-[88rem] items-center justify-between px-5 py-4 md:px-10">
+          <a href="#top" className="group flex items-center gap-3" aria-label="Home">
+            <Mark className="h-7 w-7 text-ink" />
+            <span className="label hidden text-ink-2 sm:block">
+              Full-Stack × AI
+            </span>
           </a>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Цэс хаах" : "Цэс нээх"}
-            aria-expanded={open}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface text-text transition-colors hover:border-border-strong md:hidden"
-          >
-            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
-        </div>
-      </div>
 
-      {/* scroll progress */}
-      <motion.div
-        style={{ scaleX: progress }}
-        className="h-px origin-left bg-gradient-to-r from-accent via-accent-2 to-accent-3"
-      />
-
-      {/* mobile sheet */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="glass mx-4 mt-2 rounded-3xl p-4 shadow-[var(--shadow-lg)] md:hidden"
-          >
-            <nav className="flex flex-col" aria-label="Гар утасны цэс">
-              {NAV_ITEMS.map((item) => (
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
+            {NAV_ITEMS.map((item) => {
+              const isActive = active === item.href;
+              return (
                 <a
                   key={item.href}
                   href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="border-b border-border px-2 py-3.5 text-base font-medium text-text last:border-none"
+                  aria-current={isActive ? "true" : undefined}
+                  className={`label relative px-3 py-2 transition-colors ${
+                    isActive ? "text-ink" : "hover:text-ink"
+                  }`}
                 >
                   {item.label}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active"
+                      transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                      className="absolute inset-x-3 -bottom-px h-px bg-signal"
+                    />
+                  )}
+                </a>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="label flex h-9 items-center gap-2.5 border border-line px-3 transition-colors hover:border-line-strong hover:text-ink"
+            >
+              <span className="flex flex-col gap-[3px]">
+                <span
+                  className={`block h-px w-3.5 bg-current transition-transform duration-300 ${
+                    open ? "translate-y-[2px] rotate-45" : ""
+                  }`}
+                />
+                <span
+                  className={`block h-px w-3.5 bg-current transition-transform duration-300 ${
+                    open ? "-translate-y-[2px] -rotate-45" : ""
+                  }`}
+                />
+              </span>
+              {open ? "Close" : "Menu"}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <motion.div
+        style={{ scaleX: progress }}
+        className="h-px origin-left bg-signal"
+      />
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 top-0 -z-10 flex flex-col justify-between bg-bg pt-24 pb-8"
+          >
+            <div className="blueprint pointer-events-none absolute inset-0 opacity-60" />
+            <nav
+              className="relative mx-auto w-full max-w-[88rem] flex-1 overflow-y-auto px-5 md:px-10"
+              aria-label="Full menu"
+            >
+              {MENU_ITEMS.map((item, i) => (
+                <motion.a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.12 + i * 0.045, duration: 0.5 }}
+                  className="group flex items-baseline gap-5 border-b border-line py-4 md:py-5"
+                >
+                  <span className="label w-6 shrink-0">{item.meta}</span>
+                  <span className="display text-3xl transition-transform duration-500 group-hover:translate-x-2 md:text-5xl">
+                    {item.label}
+                  </span>
+                </motion.a>
+              ))}
+            </nav>
+
+            <div className="relative mx-auto flex w-full max-w-[88rem] flex-wrap items-center gap-x-6 gap-y-2 px-5 pt-6 md:px-10">
+              {activeSocials.map((social) => (
+                <a
+                  key={social.id}
+                  href={social.href}
+                  target={social.href.startsWith("http") ? "_blank" : undefined}
+                  rel="noreferrer"
+                  className="label transition-colors hover:text-ink"
+                >
+                  {social.label}
                 </a>
               ))}
-              <a
-                href={links.github}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => setOpen(false)}
-                className="mt-3 inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-3 text-sm font-semibold"
-              >
-                <GithubIcon className="h-4 w-4" /> GitHub үзэх
-              </a>
-            </nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
