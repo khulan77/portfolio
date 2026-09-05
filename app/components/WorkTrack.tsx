@@ -10,7 +10,7 @@ import BrowserFrame from "./BrowserFrame";
 import ProjectShot from "./ProjectShot";
 import { useSpotlight } from "../lib/use-spotlight";
 import { useMediaQuery } from "../lib/media";
-import { projects, type Project } from "../data/projects";
+import { homeProjects, type Project } from "../data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -141,11 +141,11 @@ export default function WorkTrack() {
             <span className="outline-type">WORK</span>
           </span>
           <span className="label mt-6">
-            {projects.length} projects · scroll to run
+            {homeProjects.length} projects · scroll to run
           </span>
         </div>
 
-        {projects.map((project, i) => (
+        {homeProjects.map((project, i) => (
           <TrackCard key={project.slug} project={project} index={i} />
         ))}
 

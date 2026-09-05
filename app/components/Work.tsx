@@ -7,7 +7,7 @@ import BrowserFrame from "./BrowserFrame";
 import ProjectShot from "./ProjectShot";
 import WorkTrack from "./WorkTrack";
 import { useSpotlight } from "../lib/use-spotlight";
-import { featuredProject, projects, type Project } from "../data/projects";
+import { featuredProject, homeProjects, type Project } from "../data/projects";
 
 function TeamBadge({ team }: { team: Project["team"] }) {
   return (
@@ -105,15 +105,14 @@ function FeaturedCase({ project }: { project: Project }) {
   );
 }
 
-export default function Work({ index }: { index: string }) {
+export default function Work() {
   return (
     <section id="work" className="py-24 md:py-32">
       <div className="mx-auto max-w-[88rem] px-5 md:px-10">
         <SectionHead
-          index={index}
           name="Selected work"
           title="Асуудлаас эхэлж, ажиллаж байгаа системээр төгссөн төслүүд."
-          meta={`${projects.length} projects`}
+          meta={`${homeProjects.length} projects`}
         />
 
         <div className="mt-14">

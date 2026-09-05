@@ -9,7 +9,7 @@ import { architecture } from "../data/systems";
  * A request, traced from the person making it down to the data and back.
  * Listing technologies proves nothing; showing where each one sits does.
  */
-export default function Engineering({ index }: { index: string }) {
+export default function Engineering() {
   const [open, setOpen] = useState(architecture[1].id);
 
   return (
@@ -18,7 +18,6 @@ export default function Engineering({ index }: { index: string }) {
       className="mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
     >
       <SectionHead
-        index={index}
         name="Engineering"
         title="Хүсэлт нэг бүр эдгээр давхаргаар дамжина."
         lead="Давхарга сонгоод тэнд юу шийдэгддэг, ямар технологи ажилладгийг үзнэ үү."

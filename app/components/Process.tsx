@@ -2,14 +2,13 @@ import Reveal from "./Reveal";
 import SectionHead from "./SectionHead";
 import { process } from "../data/process";
 
-export default function Process({ index }: { index: string }) {
+export default function Process() {
   return (
     <section
       id="process"
       className="mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
     >
       <SectionHead
-        index={index}
         name="Process"
         title="Хэрхэн бүтээдэг вэ."
         lead="Таван алхам. Аль нэгийг нь алгасах бүрд төсөл дараа нь үнэтэй болдог."

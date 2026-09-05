@@ -2,16 +2,14 @@ import Image from "next/image";
 import Reveal from "./Reveal";
 import SectionHead from "./SectionHead";
 import { brand } from "../data/profile";
-import { journey } from "../data/journey";
 
-export default function About({ index }: { index: string }) {
+export default function About() {
   return (
     <section
       id="about"
       className="mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
     >
       <SectionHead
-        index={index}
         name="About"
         title="Хамгийн хэцүү хэсэг нь код байгаагүй."
         meta={`${brand.school} · ${brand.program}`}
@@ -62,35 +60,6 @@ export default function About({ index }: { index: string }) {
           </div>
         </Reveal>
       </div>
-
-      {/* The journey, folded in as a single rail rather than its own section */}
-      <Reveal className="mt-20 border-t border-line pt-8">
-        <div className="label flex items-center justify-between">
-          <span>The journey</span>
-          <span className="hidden sm:block">Learning → Products</span>
-        </div>
-
-        <ol className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
-          {journey.map((stage, i) => (
-            <li key={stage.id} className="group">
-              {/* node + connector, forming one continuous line across the row */}
-              <div className="flex items-center gap-2" aria-hidden>
-                <span
-                  className="h-1.5 w-1.5 shrink-0 bg-signal transition-transform duration-500 group-hover:scale-150"
-                  style={{ opacity: 0.45 + (i / (journey.length - 1)) * 0.55 }}
-                />
-                <span className="h-px flex-1 bg-line" />
-              </div>
-
-              <div className="label mt-4">{String(i + 1).padStart(2, "0")}</div>
-              <h3 className="display mt-1 text-base">{stage.label}</h3>
-              <p className="mt-2 text-xs leading-relaxed text-ink-3">
-                {stage.body}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </Reveal>
     </section>
   );
 }

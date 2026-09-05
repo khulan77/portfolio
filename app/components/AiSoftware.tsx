@@ -10,7 +10,7 @@ import { pipeline } from "../data/systems";
  * is one stage inside a pipeline that starts at a problem and ends at a
  * product. Selecting a stage shows what actually happens there.
  */
-export default function AiSoftware({ index }: { index: string }) {
+export default function AiSoftware() {
   const [selected, setSelected] = useState(pipeline[2].id);
   const active = pipeline.find((stage) => stage.id === selected) ?? pipeline[0];
   const activeIndex = pipeline.indexOf(active);
@@ -26,7 +26,6 @@ export default function AiSoftware({ index }: { index: string }) {
       />
 
       <SectionHead
-        index={index}
         name="AI × Software"
         title="AI бол чат биш — урсгалын нэг давхарга."
         lead="Санаанаас бүтээгдэхүүн хүртэлх зам дээр AI хаана зогсдгийг харуулав. Алхам сонгоод дэлгэрэнгүйг нь үзнэ үү."

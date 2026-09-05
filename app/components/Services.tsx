@@ -6,14 +6,13 @@ import { services } from "../data/services";
  * Written as problem -> solution -> outcome, because that is the order a
  * client actually thinks in. Technology is the footnote, not the headline.
  */
-export default function Services({ index }: { index: string }) {
+export default function Services() {
   return (
     <section
       id="services"
       className="mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
     >
       <SectionHead
-        index={index}
         name="Services"
         title="Юу барьж өгч чадах вэ."
         lead="Технологи биш, үр дүнгээр нь бичсэн. Хэрэгцээ тань энд байхгүй бол шууд бичээрэй."

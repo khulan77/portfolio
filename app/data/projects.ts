@@ -12,6 +12,12 @@ export type Project = {
   /** Honest labelling: built alone, or built with a team. */
   team: "solo" | "team";
   featured?: boolean;
+  /**
+   * Set to false to keep a project off the home page list. Its case study
+   * page, sitemap entry and every counted metric stay exactly as they were —
+   * this hides work from the shortlist, it does not un-ship it.
+   */
+  onHome?: boolean;
   problem: string;
   idea: string;
   solution: string;
@@ -266,6 +272,7 @@ export const projects: Project[] = [
   },
   {
     slug: "auth-sync",
+    onHome: false,
     title: "Auth & Database Synchronizer",
     tagline: "Keeping identity and data in sync across two services, in real time.",
     year: "2026",
@@ -323,6 +330,7 @@ export const projects: Project[] = [
 
   {
     slug: "multi-step-engine",
+    onHome: false,
     title: "Multi-Step Data Engine",
     tagline: "A long form that never loses what the user already typed.",
     year: "2025",
@@ -354,6 +362,7 @@ export const projects: Project[] = [
   },
   {
     slug: "portfolio-platform",
+    onHome: false,
     title: "Portfolio Platform",
     tagline: "The first attempt at packaging the work.",
     year: "2025",
@@ -381,6 +390,7 @@ export const projects: Project[] = [
   },
   {
     slug: "task-crud",
+    onHome: false,
     title: "Task Management CRUD",
     tagline: "Where the fundamentals were learned.",
     year: "2024",
@@ -407,6 +417,11 @@ export const projects: Project[] = [
     githubUrl: links.github,
   },
 ];
+
+/** The home page shortlist. Everything else still has a page of its own. */
+export const homeProjects = projects.filter(
+  (project) => project.onHome !== false,
+);
 
 export const featuredProject = projects.find((p) => p.featured) ?? projects[0];
 

@@ -11,7 +11,7 @@ import { activeSocials, brand, links } from "../data/profile";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Contact({ index }: { index: string }) {
+export default function Contact() {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -34,10 +34,7 @@ export default function Contact({ index }: { index: string }) {
       className="relative mx-auto max-w-[88rem] px-5 pt-24 md:px-10 md:pt-32"
     >
       <div className="label flex items-center justify-between border-t border-line pt-6">
-        <span>
-          <span className="text-signal">{index}</span>
-          <span className="mx-2 opacity-40">/</span>Contact
-        </span>
+        <span>Contact</span>
         <span className="hidden sm:block">Open for new work</span>
       </div>
 

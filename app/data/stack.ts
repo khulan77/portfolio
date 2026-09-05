@@ -130,3 +130,26 @@ export const allTech: TechEntry[] = stack.flatMap((group) =>
 );
 
 export const shippedCount = allTech.filter((tech) => tech.used > 0).length;
+
+/**
+ * Foundations that every counted project already rests on: TypeScript compiles
+ * to JavaScript, React and Next.js render HTML and CSS, PostgreSQL speaks SQL.
+ *
+ * They are held apart from the count deliberately. A superscript zero beside
+ * HTML would read as "has never used HTML", which the rest of this list
+ * disproves — the absence is an artefact of how projects record their stack,
+ * not a gap in the work.
+ */
+const FOUNDATION_NAMES = new Set(["JavaScript", "HTML", "CSS", "SQL"]);
+
+export const isFoundation = (tech: string) => FOUNDATION_NAMES.has(tech);
+
+/** In a shipped project, and counted. */
+export const shippedTech = allTech.filter((tech) => tech.used > 0);
+
+/** Named in the toolkit, not yet in any recorded project. Said plainly. */
+export const exploringTech = allTech.filter(
+  (tech) => tech.used === 0 && !isFoundation(tech.name),
+);
+
+export const foundationTech = allTech.filter((tech) => isFoundation(tech.name));

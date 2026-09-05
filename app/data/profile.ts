@@ -6,8 +6,19 @@
  * fill it in and the matching UI appears automatically.
  */
 
-/** [ADD DOMAIN] — used for canonical URLs, sitemap and Open Graph. */
-export const SITE_URL = "https://khulan.dev";
+/**
+ * The one place the site's own address is defined. Canonical links, the
+ * sitemap, robots.txt, Open Graph and JSON-LD all derive from it, so a domain
+ * change is a single edit — or, on Vercel, a single environment variable.
+ *
+ * The fallback is the address the site actually answers on today. Point
+ * NEXT_PUBLIC_SITE_URL at the custom domain the moment it resolves.
+ */
+const FALLBACK_SITE_URL = "https://portfolio-nine-rouge-57.vercel.app";
+
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL
+).replace(/\/+$/, "");
 
 export const brand = {
   positioning: "Full-Stack Engineer × AI Product Builder",

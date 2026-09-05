@@ -13,14 +13,17 @@ const NAV_ITEMS = [
   { label: "Contact", href: "#contact" },
 ];
 
-/** The overlay carries the full map; the bar stays deliberately short. */
+/**
+ * The overlay carries the full map; the bar stays deliberately short.
+ * Every href here must match a section that is actually rendered in page.tsx —
+ * "#ai" outlived its section once and became a link to nowhere.
+ */
 const MENU_ITEMS = [
-  { label: "Work", href: "#work", meta: "01" },
-  { label: "About", href: "#about", meta: "02" },
-  { label: "Stack", href: "#stack", meta: "03" },
-  { label: "AI × Software", href: "#ai", meta: "04" },
-  { label: "Process", href: "#process", meta: "05" },
-  { label: "Contact", href: "#contact", meta: "06" },
+  { label: "Work", href: "#work" },
+  { label: "About", href: "#about" },
+  { label: "Stack", href: "#stack" },
+  { label: "Process", href: "#process" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Nav() {
@@ -179,7 +182,6 @@ export default function Nav() {
                   transition={{ delay: 0.12 + i * 0.045, duration: 0.5 }}
                   className="group flex items-baseline gap-5 border-b border-line py-4 md:py-5"
                 >
-                  <span className="label w-6 shrink-0">{item.meta}</span>
                   <span className="display text-3xl transition-transform duration-500 group-hover:translate-x-2 md:text-5xl">
                     {item.label}
                   </span>

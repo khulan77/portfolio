@@ -2,9 +2,12 @@ import Image from "next/image";
 import type { Project } from "../data/projects";
 
 /**
- * A project can exist before its screenshot does. Rather than shipping a
- * broken image, a missing shot renders as an obvious, deliberate placeholder
- * that disappears the moment the file is dropped into /public.
+ * A project can exist before its screenshot does.
+ *
+ * The missing-file marker is an authoring signal, so it is shown only while
+ * developing. A visitor to the deployed site would read "[ADD SCREENSHOT]" as
+ * an unfinished page rather than as a note to the author, so production gets a
+ * composed frame carrying the project's own name instead.
  */
 export default function ProjectShot({
   project,
@@ -16,14 +19,25 @@ export default function ProjectShot({
   eager?: boolean;
 }) {
   if (!project.image) {
+    const authoring = process.env.NODE_ENV !== "production";
+
     return (
-      <div className="blueprint absolute inset-0 flex flex-col items-center justify-center gap-4 bg-bg-3 px-6 text-center">
-        <span className="display text-xl leading-tight md:text-2xl">
+      <div
+        role="img"
+        aria-label={`${project.title} — screenshot not available`}
+        className="blueprint absolute inset-0 flex flex-col items-center justify-center gap-4 bg-bg-3 px-6 text-center"
+      >
+        <span className="display text-xl leading-tight md:text-2xl" aria-hidden>
           {project.title}
         </span>
-        <span className="mono border border-dashed border-line px-2 py-1 text-[10px] text-ink-3">
-          [ADD SCREENSHOT]
-        </span>
+        {authoring && (
+          <span
+            className="mono border border-dashed border-line px-2 py-1 text-[10px] text-ink-3"
+            aria-hidden
+          >
+            [ADD SCREENSHOT]
+          </span>
+        )}
       </div>
     );
   }
