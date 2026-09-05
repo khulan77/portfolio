@@ -30,8 +30,16 @@ export type Project = {
   technologies: string[];
   /** null until a screenshot exists — the UI shows a placeholder, not a break. */
   image: string | null;
-  liveUrl: string;
-  githubUrl: string;
+  /**
+   * A client system behind a login has no public URL and no public repo.
+   * null says so honestly; the UI drops the link rather than inventing one.
+   */
+  liveUrl: string | null;
+  githubUrl: string | null;
+  /** Shown instead of a live link when the work is not publicly reachable. */
+  access?: string;
+  /** A monochrome client mark, where one exists and may be shown. */
+  logo?: string;
 };
 
 export const CATEGORY_LABELS: Record<ProjectCategory | "all", string> = {
@@ -85,6 +93,7 @@ export const projects: Project[] = [
   },
   {
     slug: "tomiyo-lab",
+    onHome: false,
     title: "Tomiyo v2",
     tagline: "A browser laboratory where physics is built, measured and explained.",
     year: "2026",
@@ -107,6 +116,29 @@ export const projects: Project[] = [
     image: "/tomiyo-lab.png",
     liveUrl: "https://client-sand-pi-14.vercel.app/",
     githubUrl: links.github,
+  },
+  {
+    slug: "organic-care",
+    title: "Organic Care",
+    tagline: "A booking system run from the admin side, not the customer's.",
+    year: "2026",
+    categories: ["fullstack", "product"],
+    team: "solo",
+    featured: true,
+    problem: "[ADD PROBLEM — энэ салон юун дээр гацаж байсан бэ]",
+    idea: "[ADD IDEA]",
+    solution:
+      "Цаг захиалгыг үйлчлүүлэгч биш, админ өөрөө бүртгэдэг систем. Захиалга үүсгэх, бүртгэх ажил бүхэлдээ админ талд явагдана.",
+    role: "Бүтэн системийг ганцаараа барьсан.",
+    challenge: "[ADD TECHNICAL CHALLENGE]",
+    approach: "[ADD HOW YOU SOLVED IT]",
+    outcome: "[ADD PROJECT RESULT]",
+    technologies: ["Next.js", "TypeScript", "Git / GitHub", "Vercel"],
+    image: null,
+    logo: "/organic-care-mark.png",
+    access: "Хаалттай систем — админ хандалт",
+    liveUrl: null,
+    githubUrl: null,
   },
   {
     slug: "lumiere",
@@ -177,6 +209,7 @@ export const projects: Project[] = [
   },
     {
     slug: "tmdb-platform",
+    onHome: false,
     title: "TMDB Movie Platform",
     tagline: "Search, filter and pagination that survive a page refresh.",
     year: "2025",
@@ -305,6 +338,7 @@ export const projects: Project[] = [
   },
   {
     slug: "assistant-hub",
+    onHome: false,
     title: "OpenAI Assistant Hub",
     tagline: "A typed, safe surface over a raw LLM API.",
     year: "2025",

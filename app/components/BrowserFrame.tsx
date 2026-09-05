@@ -6,18 +6,23 @@ import type { ReactNode } from "react";
  */
 export default function BrowserFrame({
   url,
+  label,
   children,
   compact = false,
 }: {
-  url: string;
+  url: string | null;
+  /** Shown in place of a host when there is no public address. */
+  label?: string;
   children: ReactNode;
   compact?: boolean;
 }) {
-  let host = "";
-  try {
-    host = new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    host = "";
+  let host = label ?? "";
+  if (url) {
+    try {
+      host = new URL(url).hostname.replace(/^www\./, "");
+    } catch {
+      host = label ?? "";
+    }
   }
 
   return (

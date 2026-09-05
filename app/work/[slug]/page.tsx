@@ -108,18 +108,37 @@ export default async function CaseStudy({ params }: Params) {
             </span>
           )}
 
-          <div className="mt-12 flex flex-wrap gap-3">
-            <a href={project.liveUrl} target="_blank" rel="noreferrer" className="btn btn-signal group">
-              Live demo
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-            </a>
-            <a href={project.githubUrl} target="_blank" rel="noreferrer" className="btn btn-line">
-              Source
-            </a>
+          <div className="mt-12 flex flex-wrap items-center gap-3">
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-signal group"
+              >
+                Live demo
+                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </a>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-line"
+              >
+                Source
+              </a>
+            )}
+            {project.access && (
+              <span className="border border-line px-4 py-3 text-sm text-ink-2">
+                {project.access}
+              </span>
+            )}
           </div>
 
           <Reveal className="mt-16">
-            <BrowserFrame url={project.liveUrl} compact>
+            <BrowserFrame url={project.liveUrl} label={project.access} compact>
               <ProjectShot project={project} sizes="100vw" eager />
             </BrowserFrame>
           </Reveal>

@@ -2,13 +2,54 @@ import Image from "next/image";
 import type { Project } from "../data/projects";
 
 /**
- * A project can exist before its screenshot does.
- *
- * The missing-file marker is an authoring signal, so it is shown only while
- * developing. A visitor to the deployed site would read "[ADD SCREENSHOT]" as
- * an unfinished page rather than as a note to the author, so production gets a
- * composed frame carrying the project's own name instead.
+ * A client system behind a login has no screenshot to show, and inventing one
+ * would misrepresent it. Rather than an empty card, a padlock or the words
+ * "no demo", the frame carries an abstract of the interface — a rail and a few
+ * rows, blurred, drawn only in the act's own ink — with the client's mark on
+ * top. The mark is drawn through a CSS mask so it takes the page's ink colour
+ * instead of the brand's own, and lifts to full ink on hover.
  */
+function ClosedSystem({ project }: { project: Project }) {
+  return (
+    <div
+      role="img"
+      aria-label={`${project.title} — ${project.access ?? "closed system"}`}
+      className="absolute inset-0 overflow-hidden bg-bg-3"
+    >
+      <div aria-hidden className="absolute inset-0 opacity-[0.13] blur-[8px]">
+        <div className="absolute inset-y-6 left-6 w-[18%] rounded-sm bg-ink" />
+        <div className="absolute left-[26%] right-6 top-8 h-6 rounded-sm bg-ink" />
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="absolute left-[26%] h-4 rounded-sm bg-ink"
+            style={{ top: `${28 + i * 15}%`, right: `${6 + i * 7}%` }}
+          />
+        ))}
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center">
+        {project.logo && (
+          <span
+            aria-hidden
+            className="block h-[46%] w-[46%] bg-current text-ink-3 opacity-70 transition-all duration-500 group-hover:text-ink group-hover:opacity-100"
+            style={{
+              WebkitMaskImage: `url(${project.logo})`,
+              maskImage: `url(${project.logo})`,
+              WebkitMaskSize: "contain",
+              maskSize: "contain",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
+              WebkitMaskPosition: "center",
+              maskPosition: "center",
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function ProjectShot({
   project,
   sizes,
@@ -18,9 +59,12 @@ export default function ProjectShot({
   sizes: string;
   eager?: boolean;
 }) {
-  if (!project.image) {
-    const authoring = process.env.NODE_ENV !== "production";
+  if (!project.image && project.logo) return <ClosedSystem project={project} />;
 
+  if (!project.image) {
+    // A project can exist before its screenshot does. The marker is an
+    // authoring signal, so it only shows while developing.
+    const authoring = process.env.NODE_ENV !== "production";
     return (
       <div
         role="img"

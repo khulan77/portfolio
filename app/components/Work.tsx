@@ -25,7 +25,7 @@ function FeaturedCase({ project }: { project: Project }) {
     >
       <div className="grid md:grid-cols-2">
         <div className="p-4 md:p-6">
-          <BrowserFrame url={project.liveUrl}>
+          <BrowserFrame url={project.liveUrl} label={project.access}>
             <ProjectShot
               project={project}
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -88,26 +88,36 @@ function FeaturedCase({ project }: { project: Project }) {
           </dl>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-5">
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="group/link inline-flex items-center gap-2 text-sm text-ink"
-            >
-              Open the live site
-              <ArrowUpRight
-                aria-hidden
-                className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5"
-              />
-            </a>
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="label transition-colors hover:text-ink"
-            >
-              Source code
-            </a>
+            {project.liveUrl ? (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="group/link inline-flex items-center gap-2 text-sm text-ink"
+              >
+                Open the live site
+                <ArrowUpRight
+                  aria-hidden
+                  className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5"
+                />
+              </a>
+            ) : (
+              /* Stated plainly, not apologised for: a system with real users
+                 behind a login is heavier evidence than a public demo. */
+              <span className="inline-flex items-center gap-2 border border-line px-3 py-1.5 text-sm text-ink-2">
+                {project.access}
+              </span>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="label transition-colors hover:text-ink"
+              >
+                Source code
+              </a>
+            )}
             <Link
               href={`/work/${project.slug}`}
               className="label transition-colors hover:text-ink"
