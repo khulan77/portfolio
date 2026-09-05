@@ -14,7 +14,16 @@ import { homeProjects, type Project } from "../data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function TrackCard({ project, index }: { project: Project; index: number }) {
+/** The host alone; the scheme and path carry no meaning for a reader. */
+function hostOf(url: string) {
+  try {
+    return new URL(url).host.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+function TrackCard({ project }: { project: Project }) {
   const { ref, onPointerMove } = useSpotlight<HTMLDivElement>();
 
   return (
@@ -23,16 +32,21 @@ function TrackCard({ project, index }: { project: Project; index: number }) {
       onPointerMove={onPointerMove}
       className="track-card spotlight w-[82vw] shrink-0 snap-center sm:w-[58vw] lg:w-[40vw] xl:w-[34vw]"
     >
-      <Link
-        href={`/work/${project.slug}`}
+      {/* The card opens the running site itself rather than a write-up about
+          it. A visitor who wants to judge the work would rather use it. */}
+      <a
+        href={project.liveUrl}
+        target="_blank"
+        rel="noreferrer"
         className="group flex h-full flex-col border border-line bg-bg-2"
       >
-        <div className="flex items-center justify-between border-b border-line px-5 py-3">
-          <span className="display text-2xl leading-none">
-            {String(index + 1).padStart(2, "0")}
-          </span>
+        {/* The card's position in the row told the reader nothing, so the
+            big number is gone. Year and team are separated by the layout
+            rather than by an interpunct. */}
+        <div className="flex items-baseline justify-between border-b border-line px-5 py-3">
+          <span className="mono text-sm text-ink">{project.year}</span>
           <span className="label">
-            {project.team === "team" ? "Team" : "Solo"} · {project.year}
+            {project.team === "team" ? "With a team" : "Solo"}
           </span>
         </div>
 
@@ -61,13 +75,27 @@ function TrackCard({ project, index }: { project: Project; index: number }) {
             ))}
           </ul>
 
-          <div className="mt-auto flex items-center justify-between border-t border-line pt-4">
-            <span className="label transition-colors group-hover:text-signal">
-              Read case study
+          <div className="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+            <span className="mono truncate text-xs text-ink-3 transition-colors group-hover:text-signal">
+              {hostOf(project.liveUrl)}
             </span>
-            <ArrowUpRight className="h-4 w-4 text-ink-3 transition-all group-hover:translate-x-0.5 group-hover:text-signal" />
+            <ArrowUpRight
+              aria-hidden
+              className="h-4 w-4 shrink-0 text-ink-3 transition-all group-hover:translate-x-0.5 group-hover:text-signal"
+            />
           </div>
         </div>
+      </a>
+
+      {/*
+        Outside the card's own anchor — a link cannot be nested inside another
+        link, and the write-up is a different destination from the live site.
+      */}
+      <Link
+        href={`/work/${project.slug}`}
+        className="label mt-3 inline-block transition-colors hover:text-ink"
+      >
+        Дэлгэрэнгүй
       </Link>
     </div>
   );
@@ -141,12 +169,12 @@ export default function WorkTrack() {
             <span className="outline-type">WORK</span>
           </span>
           <span className="label mt-6">
-            {homeProjects.length} projects · scroll to run
+            Scroll to run
           </span>
         </div>
 
-        {homeProjects.map((project, i) => (
-          <TrackCard key={project.slug} project={project} index={i} />
+        {homeProjects.map((project) => (
+          <TrackCard key={project.slug} project={project} />
         ))}
 
         <div className="hidden w-[22vw] shrink-0 flex-col justify-center lg:flex">

@@ -22,13 +22,26 @@ export default function Home() {
   return (
     <>
       <Nav />
+      {/*
+        Three acts. Each wrapper carries a complete palette, so the seam
+        between them is a hard edge rather than a fade — that edge is the
+        only thing telling the reader one part has ended and another begun.
+      */}
       <main id="main" className="relative">
-        <Hero />
-        <Work />
-        <About />
-        <Stack />
-        <Process />
-        <Contact />
+        <div className="act-light">
+          <Hero />
+        </div>
+
+        <div className="act-dark">
+          <Work />
+          <About />
+          <Stack />
+          <Process />
+        </div>
+
+        <div className="act-light">
+          <Contact />
+        </div>
       </main>
     </>
   );

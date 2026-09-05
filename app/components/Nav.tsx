@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import Mark from "./Mark";
-import ThemeToggle from "./ThemeToggle";
 import { activeSocials } from "../data/profile";
 
 const NAV_ITEMS = [
@@ -93,7 +92,7 @@ export default function Nav() {
             : "border-b border-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-[88rem] items-center justify-between px-5 py-4 md:px-10">
+        <div className="shell flex items-center justify-between py-4">
           <a href="#top" className="group flex items-center gap-3" aria-label="Home">
             <Mark className="h-7 w-7 text-ink" />
             <span className="label hidden text-ink-2 sm:block">
@@ -127,7 +126,6 @@ export default function Nav() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
@@ -169,7 +167,7 @@ export default function Nav() {
           >
             <div className="blueprint pointer-events-none absolute inset-0 opacity-60" />
             <nav
-              className="relative mx-auto w-full max-w-[88rem] flex-1 overflow-y-auto px-5 md:px-10"
+              className="shell relative flex-1 overflow-y-auto"
               aria-label="Full menu"
             >
               {MENU_ITEMS.map((item, i) => (
@@ -189,7 +187,7 @@ export default function Nav() {
               ))}
             </nav>
 
-            <div className="relative mx-auto flex w-full max-w-[88rem] flex-wrap items-center gap-x-6 gap-y-2 px-5 pt-6 md:px-10">
+            <div className="shell relative flex flex-wrap items-center gap-x-6 gap-y-2 pt-6">
               {activeSocials.map((social) => (
                 <a
                   key={social.id}

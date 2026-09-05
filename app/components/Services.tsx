@@ -10,7 +10,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
+      className="shell section-y"
     >
       <SectionHead
         name="Services"

@@ -3,7 +3,6 @@
 import { useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useTheme } from "../lib/theme";
 
 /**
  * Deterministic PRNG (mulberry32) so the lattice is identical on every render
@@ -19,10 +18,12 @@ function seededRandom(seed: number) {
   };
 }
 
-const PALETTE = {
-  dark: { node: "#f5f3ef", line: "#5c5952", signal: "#ff6a1f" },
-  light: { node: "#141310", line: "#b3aea3", signal: "#b83a06" },
-} as const;
+/**
+ * The lattice lives in the hero, and the hero is Act I — chalk — for the life
+ * of the page. WebGL cannot read CSS custom properties, so these track the
+ * .act-light block in globals.css by hand.
+ */
+const COLORS = { node: "#16150f", line: "#b6b1a6" } as const;
 
 /**
  * A structure rather than an object: nodes held in relation to each other.
@@ -30,8 +31,7 @@ const PALETTE = {
  * a couple of buffer writes.
  */
 function Lattice({ count }: { count: number }) {
-  const theme = useTheme();
-  const colors = PALETTE[theme];
+  const colors = COLORS;
 
   const points = useRef<THREE.Points>(null);
   const lines = useRef<THREE.LineSegments>(null);
@@ -163,11 +163,11 @@ function Lattice({ count }: { count: number }) {
         />
       </points>
 
-      {/* the one live node — the signal in the system */}
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.13, 24, 24]} />
-        <meshBasicMaterial color={colors.signal} />
-      </mesh>
+      {/*
+        A single centred sphere used to sit here. It landed on top of the
+        headline — an orange disc across the "N", then a pale one — and read as
+        a smudge rather than a focal point. The lattice already has nodes.
+      */}
     </group>
   );
 }

@@ -18,7 +18,7 @@ export default function AiSoftware() {
   return (
     <section
       id="ai"
-      className="relative mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
+      className="relative shell section-y"
     >
       <div
         className="dot-grid fade-mask-y pointer-events-none absolute inset-0 -z-10 opacity-70"

@@ -31,19 +31,21 @@ export default function Contact() {
     <section
       ref={root}
       id="contact"
-      className="relative mx-auto max-w-[88rem] px-5 pt-24 md:px-10 md:pt-32"
+      className="shell relative pt-24 md:pt-32"
     >
       <div className="label flex items-center justify-between border-t border-line pt-6">
         <span>Contact</span>
         <span className="hidden sm:block">Open for new work</span>
       </div>
 
-      <h2 className="display hero-type mt-12">
+      <h2 className="display mt-12">
         <span className="contact-line block overflow-hidden">
-          <span className="block">LET&apos;S BUILD</span>
+          <span className="fit-line" style={{ "--fit": 2.9930 } as React.CSSProperties}>
+            LET&apos;S BUILD
+          </span>
         </span>
         <span className="contact-line block overflow-hidden">
-          <span className="block">
+          <span className="fit-line" style={{ "--fit": 3.2261 } as React.CSSProperties}>
             SOMETHING<span className="text-signal">.</span>
           </span>
         </span>
@@ -104,8 +106,16 @@ export default function Contact() {
         </a>
         <div className="label flex items-center gap-6">
           <span>© {new Date().getFullYear()}</span>
-          <a href="#top" className="transition-colors hover:text-ink">
-            Back to top ↑
+          {/* The arrow is its own element, so it can move without dragging
+              the words with it. Glued to the text it was just punctuation. */}
+          <a href="#top" className="group inline-flex items-center gap-2 transition-colors hover:text-ink">
+            Back to top
+            <span
+              aria-hidden
+              className="transition-transform duration-300 group-hover:-translate-y-0.5"
+            >
+              ↑
+            </span>
           </a>
         </div>
       </footer>

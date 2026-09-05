@@ -13,7 +13,7 @@ import { metrics } from "../data/projects";
 const FACTS = [
   { k: "Shipped", v: `${metrics.shipped} projects` },
   { k: "AI in production", v: `${metrics.withAi} of them` },
-  { k: "Stack", v: "Next.js · TS · Postgres" },
+  { k: "Stack", v: "Next.js, TypeScript, Postgres" },
   { k: "Working", v: "EN / MN" },
 ];
 
@@ -55,7 +55,7 @@ export default function Hero() {
     <section
       ref={root}
       id="top"
-      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden px-5 pb-8 pt-32 md:px-10"
+      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-8 pt-32"
     >
       <Scene3D />
       <div
@@ -63,7 +63,7 @@ export default function Hero() {
         aria-hidden
       />
 
-      <motion.div style={{ y, opacity }} className="mx-auto w-full max-w-[88rem]">
+      <motion.div style={{ y, opacity }} className="shell">
         {/* status */}
         <div className="hero-status label flex items-center gap-3 text-ink-2">
           <span className="relative flex h-1.5 w-1.5">
@@ -76,20 +76,26 @@ export default function Hero() {
 
         {/* The title is the message — everything else supports it. */}
         <h1 className="mt-8">
-          <span className="display hero-type block">
+          {/* --fit is the measured width of each string; see .fit-line */}
+          <span className="display block">
             <span className="hero-line block overflow-hidden">
-              <span className="block">SOFTWARE</span>
+              <span className="fit-line" style={{ "--fit": 2.8810 } as React.CSSProperties}>
+                SOFTWARE
+              </span>
             </span>
             <span className="hero-line block overflow-hidden">
-              <span className="block">
+              <span className="fit-line" style={{ "--fit": 2.6590 } as React.CSSProperties}>
                 ENGINEER<span className="text-signal">.</span>
               </span>
             </span>
           </span>
           <span className="hero-line mt-6 block overflow-hidden">
-            <span className="mono block text-sm tracking-[0.14em] text-ink-2 uppercase md:text-base">
-              Full-Stack <span className="text-signal">×</span> AI Product Builder{" "}
-              <span className="text-signal">×</span> Creative Developer
+            {/* Two claims, not three: "Creative Developer" was the one that
+                described no distinct capability the other two did not cover. */}
+            <span className="block text-base text-ink-2 md:text-lg">
+              {/* The separator is punctuation, not emphasis — in the accent it
+                  was a sixth orange mark competing inside one screen. */}
+              Full-Stack <span className="text-ink-3">×</span> AI Product Builder
             </span>
           </span>
         </h1>
@@ -133,7 +139,7 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      <div className="mx-auto mt-10 flex w-full max-w-[88rem] items-center justify-between">
+      <div className="shell mt-10 flex items-center justify-between">
         <span className="label">Scroll</span>
         <a
           href={links.emailHref}

@@ -52,7 +52,7 @@ export default function Thesis() {
         <span className="outline-type">THE PROBLEM IS THE PRODUCT</span>
       </motion.p>
 
-      <div className="relative mx-auto mt-16 grid max-w-[88rem] gap-px bg-line px-5 sm:grid-cols-2 md:px-10 lg:grid-cols-4">
+      <div className="shell relative mt-16 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
         {PILLARS.map((pillar) => (
           <div key={pillar.k} className="bg-bg p-6">
             <div className="label text-signal">{pillar.k}</div>

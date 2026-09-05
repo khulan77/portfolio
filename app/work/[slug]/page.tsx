@@ -5,7 +5,6 @@ import { ArrowLeft, ArrowUpRight, Trophy } from "lucide-react";
 import BrowserFrame from "../../components/BrowserFrame";
 import ProjectShot from "../../components/ProjectShot";
 import Mark from "../../components/Mark";
-import ThemeToggle from "../../components/ThemeToggle";
 import Reveal from "../../components/Reveal";
 import { CATEGORY_LABELS, getProject, projects } from "../../data/projects";
 import { brand } from "../../data/profile";
@@ -63,7 +62,7 @@ export default async function CaseStudy({ params }: Params) {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-bg/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[88rem] items-center justify-between px-5 py-4 md:px-10">
+        <div className="shell flex items-center justify-between py-4">
           <Link href="/" className="group flex items-center gap-3" aria-label="Home">
             <Mark className="h-7 w-7 text-ink" />
             <span className="label hidden text-ink-2 sm:block">Full-Stack × AI</span>
@@ -72,26 +71,32 @@ export default async function CaseStudy({ params }: Params) {
             <Link href="/#work" className="label inline-flex items-center gap-2 hover:text-ink">
               <ArrowLeft className="h-3.5 w-3.5" /> All work
             </Link>
-            <ThemeToggle />
           </div>
         </div>
       </header>
 
-      <main id="main" className="mx-auto max-w-[88rem] px-5 pt-32 md:px-10 md:pt-40">
+      <main id="main" className="shell pt-32 md:pt-40">
         <article>
-          <div className="label flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line pt-6">
-            <span className="text-signal">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span className="opacity-40">/</span>
-            <span>{project.year}</span>
-            <span className="opacity-40">/</span>
-            <span>{project.team === "team" ? "Team project" : "Built solo"}</span>
-            <span className="opacity-40">/</span>
-            <span>
-              {project.categories.map((c) => CATEGORY_LABELS[c]).join(" · ")}
-            </span>
-          </div>
+          {/* Named columns rather than facts strung on interpuncts. The
+              project's position in the list was decoration and is gone. */}
+          <dl className="grid grid-cols-2 gap-x-5 gap-y-6 border-t border-line pt-6 sm:grid-cols-3">
+            <div>
+              <dt className="label">Year</dt>
+              <dd className="mono mt-1.5 text-sm text-ink">{project.year}</dd>
+            </div>
+            <div>
+              <dt className="label">Built</dt>
+              <dd className="mt-1.5 text-sm text-ink">
+                {project.team === "team" ? "With a team" : "Solo"}
+              </dd>
+            </div>
+            <div>
+              <dt className="label">Focus</dt>
+              <dd className="mt-1.5 text-sm text-ink">
+                {project.categories.map((c) => CATEGORY_LABELS[c]).join(", ")}
+              </dd>
+            </div>
+          </dl>
 
           <h1 className="display mt-8 text-5xl md:text-8xl">{project.title}</h1>
           <p className="mono mt-6 max-w-2xl text-sm text-ink-2">{project.tagline}</p>

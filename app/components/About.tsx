@@ -7,12 +7,11 @@ export default function About() {
   return (
     <section
       id="about"
-      className="mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
+      className="shell section-y"
     >
       <SectionHead
         name="About"
         title="Хамгийн хэцүү хэсэг нь код байгаагүй."
-        meta={`${brand.school} · ${brand.program}`}
       />
 
       <div className="mt-14 grid gap-10 md:grid-cols-12 md:gap-16">
@@ -35,26 +34,33 @@ export default function About() {
           </Reveal>
         </div>
 
-        {/* Education, given the weight of a credential rather than a bullet */}
+        {/* The one place the name appears: signed against the credential it
+            belongs to, rather than announced at the top of the page. */}
         <Reveal className="md:col-span-5">
-          <div className="flex items-center gap-4 border border-line bg-bg-2 p-6">
-            {/* The artwork carries its own black tile, so it is placed as
-                supplied — never recoloured, never cropped. */}
-            <Image
-              src="/pinecone-academy.png"
-              alt="Pinecone Academy"
-              width={256}
-              height={256}
-              sizes="56px"
-              className="h-14 w-14 shrink-0 border border-line"
-            />
-            <div>
-              <div className="label">Education</div>
-              <div className="display mt-1.5 text-lg leading-tight">
-                {brand.school}
-              </div>
-              <div className="mono mt-1 text-xs text-ink-2">
-                {brand.program}
+          <div className="border border-line bg-bg-2 p-6">
+            <h3 className="display text-2xl leading-none">{brand.name}</h3>
+            <p className="mt-2 text-sm text-ink-2">{brand.role}</p>
+
+            <div className="mt-6 flex items-center gap-4 border-t border-line pt-6">
+              {/* The artwork carries its own black tile, so it is placed as
+                  supplied — never recoloured, never cropped. It stays with the
+                  school, not with the name, so it cannot read as a personal mark. */}
+              <Image
+                src="/pinecone-academy.png"
+                alt="Pinecone Academy"
+                width={256}
+                height={256}
+                sizes="56px"
+                className="h-14 w-14 shrink-0 border border-line"
+              />
+              <div>
+                <div className="label">Education</div>
+                <div className="display mt-1.5 text-lg leading-tight">
+                  {brand.school}
+                </div>
+                <div className="mono mt-1 text-xs text-ink-2">
+                  {brand.program}
+                </div>
               </div>
             </div>
           </div>

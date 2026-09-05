@@ -1,15 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Unbounded, Inter, JetBrains_Mono } from "next/font/google";
+import { Alumni_Sans, Inter } from "next/font/google";
 import "./globals.css";
-import { THEME_BOOT_SCRIPT } from "./lib/theme-script";
 import { SITE_URL, brand } from "./data/profile";
 import SmoothScroll from "./components/SmoothScroll";
 import Cursor from "./components/Cursor";
-import Ambient from "./components/Ambient";
 
-const unbounded = Unbounded({
-  variable: "--font-unbounded",
+/**
+ * A condensed grotesque carries the display type. Anton and Archivo were the
+ * first choices but neither ships Cyrillic, and the headings on this site are
+ * Mongolian — Alumni Sans covers both scripts at display weight.
+ */
+const alumni = Alumni_Sans({
+  variable: "--font-display-face",
   subsets: ["latin", "cyrillic"],
+  weight: ["700", "900"],
   display: "swap",
 });
 
@@ -19,11 +23,6 @@ const inter = Inter({
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
-  variable: "--font-mono-jb",
-  subsets: ["latin", "cyrillic"],
-  display: "swap",
-});
 
 const description =
   "AI-д суурилсан бүтээгдэхүүн, тэдгээрийн ард ажиллах системийг санаанаас deploy хүртэл бүтээдэг Full-Stack Software Engineer. Next.js, TypeScript, PostgreSQL, OpenAI.";
@@ -62,11 +61,9 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
+/** The page opens on Act I, so the browser chrome matches chalk. */
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f0eb" },
-    { media: "(prefers-color-scheme: dark)", color: "#08080a" },
-  ],
+  themeColor: "#e9e6df",
 };
 
 /** Structured data: a person's professional practice, no fabricated claims. */
@@ -91,12 +88,9 @@ export default function RootLayout({
   return (
     <html
       lang="mn"
-      className={`${unbounded.variable} ${inter.variable} ${jetbrains.variable}`}
-      suppressHydrationWarning
+      className={`${alumni.variable} ${inter.variable}`}
     >
       <body className="antialiased">
-        {/* Sets data-theme before first paint — must stay first in <body>. */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -108,7 +102,6 @@ export default function RootLayout({
         {/* Site-wide chrome, so sub-pages behave exactly like the home page. */}
         <SmoothScroll />
         <Cursor />
-        <Ambient />
         <div className="noise" aria-hidden />
 
         {children}

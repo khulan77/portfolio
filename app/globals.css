@@ -1,127 +1,97 @@
 @import "tailwindcss";
 
-/* `dark:` follows the explicit theme attribute set by the boot script. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
 /* ============================================================
-   IDENTITY — "SIGNAL"
-   An engineering-instrument language: warm ink, hairline rules,
-   monospace metadata, and exactly one signal colour. No second
-   accent, no gradient pairs — restraint is the premium cue.
+   IDENTITY — "CHALK & COPPER"
+   The page is staged in three acts. Each act owns a complete
+   palette, not a swap of two values: --ink-muted passes contrast
+   on coal (5.1:1) and fails on chalk (2.9:1), so the two modes
+   cannot share one set of numbers.
+
+   Act I   Hero                 chalk
+   Act II  Work · About · Stack coal
+   Act III Contact              chalk
+
+   The change between them is abrupt on purpose. A gradient
+   between acts would dissolve the only moment that marks them.
    ============================================================ */
-:root {
+
+/* Act I and III — chalk. Also the document default. */
+:root,
+.act-light {
   color-scheme: light;
 
-  /* paper */
-  --bg: #f2f0eb;
-  --bg-2: #ffffff;
-  --bg-3: #f8f7f3;
-  --line: rgba(20, 18, 15, 0.11);
-  --line-strong: rgba(20, 18, 15, 0.26);
+  --bg: #e9e6df;
+  --bg-raise: #f1efe9;
+  --ink: #16150f;          /* 14.7:1 */
+  --ink-muted: #6a6659;    /*  4.6:1 */
+  --ink-faint: #8a8578;    /*  2.9:1 — rules and disabled marks only, never text */
+  --hairline: rgba(22, 21, 15, 0.12);
+  --hairline-strong: rgba(22, 21, 15, 0.3);
+  --accent: #9c4c2c;       /*  4.8:1 as text */
+  --accent-fill: #a85433;  /*  5.3:1 under white */
+  --on-accent: #ffffff;
+  --accent-soft: rgba(168, 84, 51, 0.09);
+  --accent-line: rgba(168, 84, 51, 0.32);
 
-  /* ink — contrast on --bg: 15:1 / 6.6:1 / 4.7:1 */
-  --ink: #141310;
-  --ink-2: #57534b;
-  --ink-3: #6f6a60;
-
-  /* signal — 5.1:1 on paper, 5.8:1 under white */
-  --signal: #b83a06;
-  --signal-soft: rgba(184, 58, 6, 0.09);
-  --signal-line: rgba(184, 58, 6, 0.3);
-  --on-signal: #ffffff;
-
-  /* atmosphere */
-  --grid-line: rgba(20, 18, 15, 0.055);
-  --dot: rgba(20, 18, 15, 0.1);
-  --glow: rgba(184, 58, 6, 0.07);
-  --noise-opacity: 0.028;
+  --grid-line: rgba(22, 21, 15, 0.055);
+  --dot: rgba(22, 21, 15, 0.1);
+  --noise-opacity: 0.035;
   --noise-blend: multiply;
 
-  --shadow-sm: 0 1px 2px rgba(20, 18, 15, 0.05);
-  --shadow-md: 0 14px 34px -14px rgba(20, 18, 15, 0.2);
-  --shadow-lg: 0 40px 80px -32px rgba(20, 18, 15, 0.28);
-  --shadow-signal: 0 14px 36px -12px rgba(184, 58, 6, 0.4);
-
-  --font-display: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono-jb), ui-monospace, "SFMono-Regular", monospace;
+  --shadow-sm: 0 1px 2px rgba(22, 21, 15, 0.05);
+  --shadow-md: 0 14px 34px -14px rgba(22, 21, 15, 0.2);
+  --shadow-lg: 0 40px 80px -32px rgba(22, 21, 15, 0.28);
 }
 
-/* Dark is the primary experience — the "sophisticated dark base". */
-:root[data-theme="dark"] {
+/* Act II — coal. */
+.act-dark {
   color-scheme: dark;
 
-  --bg: #08080a;
-  --bg-2: #0e0e11;
-  --bg-3: #141418;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.22);
+  --bg: #14130f;
+  --bg-raise: #1c1a15;
+  --ink: #edeae2;          /* 15.5:1 */
+  --ink-muted: #8a8578;    /*  5.1:1 — the same hex, a different job */
+  --ink-faint: #6a6659;
+  --hairline: rgba(237, 234, 226, 0.13);
+  --hairline-strong: rgba(237, 234, 226, 0.3);
+  --accent: #c86a33;       /*  4.9:1 */
+  --accent-fill: #c86a33;
+  --on-accent: #14130f;    /*  4.9:1 */
+  --accent-soft: rgba(200, 106, 51, 0.12);
+  --accent-line: rgba(200, 106, 51, 0.35);
 
-  --ink: #f5f3ef;
-  --ink-2: #a5a29b;
-  --ink-3: #807c74;
-
-  --signal: #ff6a1f;
-  --signal-soft: rgba(255, 106, 31, 0.12);
-  --signal-line: rgba(255, 106, 31, 0.35);
-  --on-signal: #0a0a0c;
-
-  --grid-line: rgba(255, 255, 255, 0.045);
-  --dot: rgba(255, 255, 255, 0.07);
-  --glow: rgba(255, 106, 31, 0.1);
-  --noise-opacity: 0.04;
+  --grid-line: rgba(237, 234, 226, 0.05);
+  --dot: rgba(237, 234, 226, 0.075);
+  --noise-opacity: 0.035;
   --noise-blend: overlay;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 16px 40px -16px rgba(0, 0, 0, 0.75);
   --shadow-lg: 0 40px 90px -32px rgba(0, 0, 0, 0.9);
-  --shadow-signal: 0 14px 44px -12px rgba(255, 106, 31, 0.45);
 }
 
-/* No-JS fallback: honour the OS unless light was explicitly chosen. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    color-scheme: dark;
-    --bg: #08080a;
-    --bg-2: #0e0e11;
-    --bg-3: #141418;
-    --line: rgba(255, 255, 255, 0.08);
-    --line-strong: rgba(255, 255, 255, 0.22);
-    --ink: #f5f3ef;
-    --ink-2: #a5a29b;
-    --ink-3: #807c74;
-    --signal: #ff6a1f;
-    --signal-soft: rgba(255, 106, 31, 0.12);
-    --signal-line: rgba(255, 106, 31, 0.35);
-    --on-signal: #0a0a0c;
-    --grid-line: rgba(255, 255, 255, 0.045);
-    --dot: rgba(255, 255, 255, 0.07);
-    --glow: rgba(255, 106, 31, 0.1);
-    --noise-opacity: 0.04;
-    --noise-blend: overlay;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 16px 40px -16px rgba(0, 0, 0, 0.75);
-    --shadow-lg: 0 40px 90px -32px rgba(0, 0, 0, 0.9);
-    --shadow-signal: 0 14px 44px -12px rgba(255, 106, 31, 0.45);
-  }
+/* An act paints its own ground, so the seam between two acts is a hard edge. */
+.act-light,
+.act-dark {
+  background-color: var(--bg);
+  color: var(--ink);
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-bg-2: var(--bg-2);
-  --color-bg-3: var(--bg-3);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
+  --color-bg-2: var(--bg-raise);
+  --color-bg-3: var(--bg-raise);
+  --color-line: var(--hairline);
+  --color-line-strong: var(--hairline-strong);
   --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-ink-3: var(--ink-3);
-  --color-signal: var(--signal);
-  --color-signal-soft: var(--signal-soft);
-  --color-on-signal: var(--on-signal);
+  --color-ink-2: var(--ink-muted);
+  --color-ink-3: var(--ink-faint);
+  --color-signal: var(--accent);
+  --color-signal-soft: var(--accent-soft);
+  --color-on-signal: var(--on-accent);
 
-  --font-display: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono-jb), ui-monospace, "SFMono-Regular", monospace;
 }
 
 /* ============================================================
@@ -137,27 +107,25 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+p {
+  max-width: 68ch;
+}
+
 body {
+  /* The acts paint their own grounds; this is only what shows past them. */
   background-color: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
   overflow-x: hidden;
-  transition: background-color 0.4s ease, color 0.4s ease;
-}
-
-.theme-switching *,
-.theme-switching *::before,
-.theme-switching *::after {
-  transition: none !important;
 }
 
 ::selection {
-  background: var(--signal);
-  color: var(--on-signal);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 :where(a, button, [tabindex]):focus-visible {
-  outline: 2px solid var(--signal);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -168,11 +136,11 @@ body {
   top: 0.75rem;
   z-index: 200;
   translate: -50% -200%;
-  border: 1px solid var(--line-strong);
-  background: var(--bg-2);
+  border: 1px solid var(--hairline-strong);
+  background: var(--bg-raise);
   padding: 0.5rem 1.1rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
   transition: translate 0.25s ease;
 }
 .skip-link:focus-visible {
@@ -192,23 +160,31 @@ body {
    ============================================================ */
 .display {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 900;
   letter-spacing: -0.035em;
-  line-height: 0.92;
+  line-height: 0.88;
 }
 
+/* Machine-read data — counts, years, addresses. Lining, tabular figures so
+   columns of numbers line up, but no separate typeface to download. */
 .mono {
-  font-family: var(--font-mono);
-  font-variant-ligatures: none;
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0;
 }
 
-/* the recurring instrument label: 01 / SECTION NAME */
+/*
+ * A section's name, or a field's name. Formerly ALL-CAPS monospace with
+ * stretched tracking, which is the single loudest tell of a generated page:
+ * it shouted at the reader without telling them anything. It is now simply
+ * small, quiet text that gets out of the way of the thing it labels.
+ */
 .label {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: var(--ink-faint);
 }
 
 .statement {
@@ -218,32 +194,66 @@ body {
   text-wrap: balance;
 }
 
-.hero-type {
-  font-size: clamp(3rem, 11.5vw, 10rem);
-  line-height: 0.86;
+/*
+ * Display lines that fill the column exactly, with no gap at either edge.
+ *
+ * A single font-size cannot do this: in a proportional face "SOFTWARE" and
+ * "SOMETHING." are different widths, so one of them would always fall short.
+ * Each line therefore carries its own measured width in --fit and is sized
+ * to 100cqi / --fit, which fills the column at every viewport.
+ *
+ * --fit values were measured in the running page with Alumni Sans applied —
+ * measuring before the webfont loads returns fallback widths, which are close
+ * to twice as wide and silently halve the headline. RE-MEASURE IF THE COPY
+ * CHANGES: the widths are per string, not per character count.
+ */
+.fit-line {
+  display: block;
+  font-size: calc(100cqi / var(--fit));
+  line-height: 0.82;
   letter-spacing: -0.045em;
+  white-space: nowrap;
 }
 
 .signal-text {
-  color: var(--signal);
+  color: var(--accent);
 }
 
 /* A single word carved out of the headline, drawn rather than filled. */
 .outline-type {
   color: transparent;
-  -webkit-text-stroke: 1px var(--line-strong);
+  -webkit-text-stroke: 1px var(--hairline-strong);
 }
 
 /* ============================================================
    STRUCTURE — hairlines and the instrument grid
    ============================================================ */
+/*
+ * One measure for the whole site. The container was 1408px, which let lines
+ * run long enough that the page read as a template stretched to fit; 1180
+ * holds the grid at a width a person can actually scan.
+ */
+.shell {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 1180px;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+  /* Display type is sized against this box, not the viewport — see .fit-line */
+  container-type: inline-size;
+}
+
+/* Portfolios fail from being cramped, not from having air. */
+.section-y {
+  padding-block: clamp(6rem, 14vh, 11rem);
+}
+
 .rule {
-  border-color: var(--line);
+  border-color: var(--hairline);
 }
 
 .frame {
-  border: 1px solid var(--line);
-  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  background: var(--bg-raise);
 }
 
 .blueprint {
@@ -286,10 +296,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  letter-spacing: 0;
   line-height: 1;
   padding: 1.05rem 1.75rem;
   border: 1px solid transparent;
@@ -299,8 +308,8 @@ body {
 }
 
 .btn-signal {
-  background: var(--signal);
-  color: var(--on-signal);
+  background: var(--accent);
+  color: var(--on-accent);
   box-shadow: var(--shadow-signal);
 }
 .btn-signal:hover {
@@ -308,7 +317,7 @@ body {
 }
 
 .btn-line {
-  border-color: var(--line-strong);
+  border-color: var(--hairline-strong);
   color: var(--ink);
 }
 .btn-line:hover {
@@ -320,18 +329,17 @@ body {
 
 /* filter chips */
 .chip {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  letter-spacing: 0;
   padding: 0.55rem 0.95rem;
-  border: 1px solid var(--line);
-  color: var(--ink-3);
+  border: 1px solid var(--hairline);
+  color: var(--ink-faint);
   transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
 }
 .chip:hover {
   color: var(--ink);
-  border-color: var(--line-strong);
+  border-color: var(--hairline-strong);
 }
 .chip[data-active="true"] {
   background: var(--ink);
@@ -355,7 +363,7 @@ body {
   padding: 1px;
   background: radial-gradient(
     300px circle at var(--mx) var(--my),
-    var(--signal),
+    var(--accent),
     transparent 68%
   );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -372,7 +380,7 @@ body {
   pointer-events: none;
   background: radial-gradient(
     360px circle at var(--mx) var(--my),
-    var(--signal-soft),
+    var(--accent-soft),
     transparent 62%
   );
   opacity: 0;
@@ -399,7 +407,7 @@ body {
   width: 5px;
   height: 5px;
   border-radius: 9999px;
-  background: var(--signal);
+  background: var(--accent);
 }
 .cursor-ring {
   width: 32px;
@@ -412,27 +420,13 @@ body {
 .cursor-ring.is-hover {
   width: 58px;
   height: 58px;
-  background: var(--signal-soft);
-  border-color: var(--signal);
+  background: var(--accent-soft);
+  border-color: var(--accent);
 }
 
 /* ============================================================
    AMBIENT
    ============================================================ */
-@keyframes drift-a {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(5vw, 4vh, 0) scale(1.12); }
-}
-@keyframes drift-b {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.1); }
-  50% { transform: translate3d(-4vw, -5vh, 0) scale(0.95); }
-}
-.blob {
-  position: absolute;
-  border-radius: 9999px;
-  will-change: transform;
-  pointer-events: none;
-}
 
 @keyframes pulse-ring {
   0% { transform: scale(0.9); opacity: 0.8; }
@@ -444,21 +438,9 @@ body {
 }
 
 /* ============================================================
-   THEME SWITCH — circular reveal (driven from ThemeToggle)
-   ============================================================ */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-::view-transition-old(root) { z-index: 1; }
-::view-transition-new(root) { z-index: 9999; }
-
-/* ============================================================
    REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .blob,
   .pulse-ring { animation: none !important; }
   .btn:hover { transform: none; }
   * { scroll-behavior: auto !important; }
@@ -468,8 +450,8 @@ body {
 ::-webkit-scrollbar { width: 9px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb {
-  background: var(--line-strong);
+  background: var(--hairline-strong);
   border: 3px solid var(--bg);
   border-radius: 9999px;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--signal); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }

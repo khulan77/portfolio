@@ -2,46 +2,44 @@ import Reveal from "./Reveal";
 import SectionHead from "./SectionHead";
 import TechMark from "./TechMark";
 import { projects } from "../data/projects";
-import {
-  exploringTech,
-  foundationTech,
-  projectsUsing,
-  shippedCount,
-  stack,
-} from "../data/stack";
+import { projectsUsing, stack, stackTotal } from "../data/stack";
 
 /**
- * Three tiers, because one flat list was making a claim it could not support.
+ * The whole toolkit, grouped, with nothing held back.
  *
- *   shipped     — in a recorded project, carrying a counted superscript
- *   foundation  — implied by the shipped list, so counted separately would lie
- *   exploring   — named in the toolkit, not yet in any project. Said plainly.
+ * A superscript appears only where a technology is recorded in a shipped
+ * project, so the count adds evidence without turning its absence into a
+ * verdict — plenty of these are known and simply have not been written down
+ * against a project yet.
  *
  * Deliberately a server component: the section is hover-only CSS, so it costs
  * the visitor no JavaScript at all.
  */
 export default function Stack() {
-  const groups = stack
-    .map((group) => ({
-      ...group,
-      items: group.items.filter((item) => projectsUsing(item) > 0),
-    }))
-    .filter((group) => group.items.length > 0);
-
   return (
-    <section
-      id="stack"
-      className="mx-auto max-w-[88rem] px-5 py-24 md:px-10 md:py-32"
-    >
-      <SectionHead
-        name="Stack"
-        title="Ажилдаа хэрэглэдэг технологиуд."
-        lead={`Дээд индекс нь тухайн технологийг ${projects.length} төслийн хэдэн дээр нь production-д ашигласныг заана — тоолсон, зарлаагүй.`}
-        meta={`${shippedCount} production-д`}
-      />
+    <section id="stack" className="shell section-y">
+      {/*
+        The short side holds still while the long side runs past it. Below
+        1024px there is not enough width for two columns to be worth it, so
+        the heading simply sits above the list as normal flow.
+      */}
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-28">
+            <SectionHead
+              name="Stack"
+              title="Ажилдаа хэрэглэдэг технологиуд."
+              lead={`Дээд индекс нь тухайн технологийг ${projects.length} төслийн хэдэн дээр нь production-д ашигласныг заана — тоолсон, зарлаагүй.`}
+              meta={`${stackTotal} технологи`}
+            />
+          </div>
+        </div>
 
-      <Reveal className="mt-14 flex flex-col gap-12 md:gap-14" stagger>
-        {groups.map((group) => (
+        <Reveal
+          className="flex flex-col gap-12 md:gap-14 lg:col-span-7 lg:col-start-6"
+          stagger
+        >
+        {stack.map((group) => (
           <div key={group.id}>
             <div className="flex items-baseline gap-4 border-b border-line pb-3">
               <h3 className="label text-ink">{group.title}</h3>
@@ -54,7 +52,11 @@ export default function Stack() {
                 return (
                   <li
                     key={item}
-                    title={`${item} — ${used} of ${projects.length} projects`}
+                    title={
+                      used > 0
+                        ? `${item} — ${used} of ${projects.length} projects`
+                        : undefined
+                    }
                     className="group/tech inline-flex items-center gap-2.5 text-ink transition-colors duration-300 hover:text-signal"
                   >
                     <span className="transition-transform duration-300 group-hover/tech:-translate-y-0.5">
@@ -63,9 +65,17 @@ export default function Stack() {
                     <span className="display text-lg leading-none md:text-xl">
                       {item}
                     </span>
-                    <span className="mono -translate-y-2 text-[10px] text-signal">
-                      {used}
-                    </span>
+                    {/*
+                      The count carries the information. In the accent it put
+                      thirteen orange marks on a single screen, which is noise
+                      rather than emphasis — the accent stays reserved for the
+                      CTA, the status dot, hover rules and active nav.
+                    */}
+                    {used > 0 && (
+                      <span className="mono -translate-y-2 text-[10px] text-ink-2">
+                        {used}
+                      </span>
+                    )}
                   </li>
                 );
               })}
@@ -75,22 +85,9 @@ export default function Stack() {
               {group.note}
             </p>
           </div>
-        ))}
-      </Reveal>
-
-      {/* The two tiers that carry no count, kept quiet and kept honest. */}
-      <Reveal className="mt-16 flex flex-col gap-3 border-t border-line pt-8">
-        <p className="text-[0.8125rem] leading-relaxed text-ink-3">
-          <span className="text-ink-2">Суурь</span>
-          {` — ${foundationTech.map((tech) => tech.name).join(", ")}. `}
-          Дээрх бүх төсөл эдгээр дээр тогтдог тул тусад нь тоолоогүй.
-        </p>
-        <p className="text-[0.8125rem] leading-relaxed text-ink-3">
-          <span className="text-ink-2">Судалж байгаа</span>
-          {` — ${exploringTech.map((tech) => tech.name).join(", ")}. `}
-          Хараахан production-д гараагүй.
-        </p>
-      </Reveal>
+          ))}
+        </Reveal>
+      </div>
     </section>
   );
 }

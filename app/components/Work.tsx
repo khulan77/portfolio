@@ -7,15 +7,12 @@ import BrowserFrame from "./BrowserFrame";
 import ProjectShot from "./ProjectShot";
 import WorkTrack from "./WorkTrack";
 import { useSpotlight } from "../lib/use-spotlight";
-import { featuredProject, homeProjects, type Project } from "../data/projects";
-
-function TeamBadge({ team }: { team: Project["team"] }) {
-  return (
-    <span className="label" title="Honest labelling of who built it">
-      {team === "team" ? "Team project" : "Built solo"}
-    </span>
-  );
-}
+import {
+  CATEGORY_LABELS,
+  featuredProject,
+  homeProjects,
+  type Project,
+} from "../data/projects";
 
 function FeaturedCase({ project }: { project: Project }) {
   const { ref, onPointerMove } = useSpotlight<HTMLDivElement>();
@@ -37,13 +34,29 @@ function FeaturedCase({ project }: { project: Project }) {
         </div>
 
         <div className="flex flex-col justify-center gap-6 border-t border-line p-6 md:border-l md:border-t-0 md:p-10">
-          <div className="label flex flex-wrap items-center gap-x-4 gap-y-2">
-            <span className="text-signal">Featured case study</span>
-            <span className="opacity-40">/</span>
-            <span>{project.year}</span>
-            <span className="opacity-40">/</span>
-            <TeamBadge team={project.team} />
-          </div>
+          {/*
+            Was "Featured case study / 2026 / Built solo" — three unrelated
+            facts strung on interpuncts, which named none of them. They are
+            now three columns, each under the question it answers.
+          */}
+          <dl className="grid grid-cols-3 gap-x-5 border-b border-line pb-5">
+            <div>
+              <dt className="label">Year</dt>
+              <dd className="mono mt-1.5 text-sm text-ink">{project.year}</dd>
+            </div>
+            <div>
+              <dt className="label">Built</dt>
+              <dd className="mt-1.5 text-sm text-ink">
+                {project.team === "team" ? "With a team" : "Solo"}
+              </dd>
+            </div>
+            <div>
+              <dt className="label">Focus</dt>
+              <dd className="mt-1.5 text-sm text-ink">
+                {project.categories.map((c) => CATEGORY_LABELS[c]).join(", ")}
+              </dd>
+            </div>
+          </dl>
 
           <div>
             <h3 className="display text-3xl md:text-4xl">{project.title}</h3>
@@ -74,21 +87,18 @@ function FeaturedCase({ project }: { project: Project }) {
             </div>
           </dl>
 
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-line pt-5">
-            <Link
-              href={`/work/${project.slug}`}
-              className="label group/link inline-flex items-center gap-1.5 text-ink"
-            >
-              Read case study
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5" />
-            </Link>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-5">
             <a
               href={project.liveUrl}
               target="_blank"
               rel="noreferrer"
-              className="label transition-colors hover:text-ink"
+              className="group/link inline-flex items-center gap-2 text-sm text-ink"
             >
-              Live
+              Open the live site
+              <ArrowUpRight
+                aria-hidden
+                className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5"
+              />
             </a>
             <a
               href={project.githubUrl}
@@ -96,8 +106,14 @@ function FeaturedCase({ project }: { project: Project }) {
               rel="noreferrer"
               className="label transition-colors hover:text-ink"
             >
-              Code
+              Source code
             </a>
+            <Link
+              href={`/work/${project.slug}`}
+              className="label transition-colors hover:text-ink"
+            >
+              Дэлгэрэнгүй
+            </Link>
           </div>
         </div>
       </div>
@@ -107,8 +123,8 @@ function FeaturedCase({ project }: { project: Project }) {
 
 export default function Work() {
   return (
-    <section id="work" className="py-24 md:py-32">
-      <div className="mx-auto max-w-[88rem] px-5 md:px-10">
+    <section id="work" className="section-y">
+      <div className="shell">
         <SectionHead
           name="Selected work"
           title="Асуудлаас эхэлж, ажиллаж байгаа системээр төгссөн төслүүд."

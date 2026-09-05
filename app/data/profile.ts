@@ -1,6 +1,9 @@
 /**
- * Brand + contact. There is deliberately no personal name anywhere on the
- * site — the identity is carried by the mark and the positioning line.
+ * Brand + contact.
+ *
+ * The name appears once, in About, next to the credential it belongs to.
+ * Everywhere else the identity is carried by the mark and the positioning
+ * line, so the name reads as a signature rather than a banner.
  *
  * Anything still written as [ADD ...] is missing data, not a design choice:
  * fill it in and the matching UI appears automatically.
@@ -21,6 +24,7 @@ export const SITE_URL = (
 ).replace(/\/+$/, "");
 
 export const brand = {
+  name: "Khulan.D",
   positioning: "Full-Stack Engineer × AI Product Builder",
   role: "Full-Stack Software Engineer",
   /** The one line the whole site has to earn. */

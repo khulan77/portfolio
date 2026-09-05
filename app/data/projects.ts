@@ -104,7 +104,7 @@ export const projects: Project[] = [
       "AI-н хүнд ажлыг серверийн талын тусдаа endpoint-үүд рүү салгаж, интерфейсийг хүлээлгэхгүй болгосон. Таних явцад Шинжилж байна гэсэн төлөв харуулж, хэрэглэгчийг хоосон дэлгэц ширтүүлэхгүй байхаар шийдсэн.",
     outcome: "[ADD PROJECT RESULT]",
     technologies: ["React", "Vite", "Three.js", "AI API", "Vercel"],
-    image: null,
+    image: "/tomiyo-lab.png",
     liveUrl: "https://client-sand-pi-14.vercel.app/",
     githubUrl: links.github,
   },
