@@ -1,4 +1,4 @@
-import { projects } from "./projects";
+import { projects, type Project } from "./projects";
 
 export type StackGroup = {
   id: string;
@@ -54,7 +54,6 @@ export const stack: StackGroup[] = [
       "Drizzle ORM",
       "Supabase",
       "Neon",
-      "Pinecone",
       "Cloudflare D1",
       "Cloudflare R2",
     ],
@@ -100,11 +99,34 @@ const ALIASES: Record<string, string[]> = {
 
 const normalise = (value: string) => value.trim().toLowerCase();
 
-/** How many shipped projects actually use this technology. Counted, never claimed. */
-export function projectsUsing(tech: string): number {
+/** The shipped projects that actually use this technology. Never asserted here. */
+export function projectsWith(tech: string): Project[] {
   const key = normalise(tech);
   const accepted = new Set([key, ...(ALIASES[key] ?? [])]);
   return projects.filter((project) =>
     project.technologies.some((entry) => accepted.has(normalise(entry))),
-  ).length;
+  );
 }
+
+export function projectsUsing(tech: string): number {
+  return projectsWith(tech).length;
+}
+
+export type TechEntry = {
+  name: string;
+  groupId: string;
+  groupTitle: string;
+  used: number;
+};
+
+/** One flat list so the whole stack can be drawn as a single grid. */
+export const allTech: TechEntry[] = stack.flatMap((group) =>
+  group.items.map((name) => ({
+    name,
+    groupId: group.id,
+    groupTitle: group.title,
+    used: projectsWith(name).length,
+  })),
+);
+
+export const shippedCount = allTech.filter((tech) => tech.used > 0).length;
