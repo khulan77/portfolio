@@ -247,6 +247,17 @@ body {
   container-type: inline-size;
 }
 
+/*
+ * The measure for display type only. It keeps the shell's gutter so the type
+ * still lines up with everything else on the left, but drops the 1180 cap so
+ * the headline can run the width of the screen. Body copy never uses this.
+ */
+.bleed {
+  width: 100%;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+  container-type: inline-size;
+}
+
 /* Portfolios fail from being cramped, not from having air. */
 .section-y {
   padding-block: clamp(6rem, 14vh, 11rem);
