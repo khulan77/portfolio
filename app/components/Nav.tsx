@@ -7,13 +7,13 @@ import { EASE, T } from "../lib/motion";
 import { activeSocials, brand, links } from "../data/profile";
 
 /**
- * One set of destinations, one control that reaches them.
+ * The destinations are visible in the bar, and the same list opens full-screen
+ * from the button beside them. Two routes to one place is a deliberate choice
+ * here: the bar answers "what is on this site" without a click, the overlay
+ * gives the list room to be read.
  *
- * The bar used to carry inline links *and* a Menu button, which is two
- * controls doing one job. The menu won: it can take the whole screen and set
- * the destinations at display size, which a row of small links in a bar
- * cannot. Every href must match a section actually rendered in page.tsx —
- * "#ai" outlived its section once and became a link to nowhere.
+ * Every href must match a section actually rendered in page.tsx — "#ai"
+ * outlived its section once and became a link to nowhere.
  */
 const MENU_ITEMS = [
   { label: "Work", href: "#work" },
@@ -143,7 +143,7 @@ export default function Nav() {
             : "border-b border-transparent"
         }`}
       >
-        <div className="shell flex items-center justify-between py-4">
+        <div className="shell flex items-center justify-between py-7">
           <a
             href="#top"
             className="group flex items-center gap-3"
@@ -154,6 +154,34 @@ export default function Nav() {
               {brand.name}
             </span>
           </a>
+
+          <nav
+            className="hidden items-center gap-8 md:flex"
+            aria-label="Sections"
+          >
+            {MENU_ITEMS.map((item) => {
+              const isActive = active === item.href;
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? "true" : undefined}
+                  className={`label relative py-1 transition-colors ${
+                    isActive ? "text-ink" : "hover:text-ink"
+                  }`}
+                >
+                  {item.label}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active"
+                      transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                      className="absolute inset-x-0 -bottom-0.5 h-px bg-signal"
+                    />
+                  )}
+                </a>
+              );
+            })}
+          </nav>
 
           <button
             ref={triggerRef}
@@ -208,7 +236,7 @@ export default function Nav() {
 
             <nav
               className="shell relative flex-1 overflow-y-auto"
-              aria-label="Sections"
+              aria-label="All sections"
             >
               {MENU_ITEMS.map((item, i) => {
                 const isActive = active === item.href;

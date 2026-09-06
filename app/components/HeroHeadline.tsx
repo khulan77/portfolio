@@ -19,25 +19,19 @@ import { gsap } from "gsap";
  */
 
 /** Natural widths measured from the running page, at font-size 1000. */
+/*
+ * Only the top word is set here, and only it carries the field. The word
+ * beneath it is smaller, still, and centred — the contrast between the two is
+ * the point, and displacing both would flatten it.
+ *
+ * The viewBox is SOFTWARE's own natural width at font-size 1000, measured in
+ * the running page, so textLength neither squeezes nor stretches the glyphs.
+ */
 const HEAD = {
-  /*
-   * Halfway between the two natural widths — SOFTWARE 3241, ENGINEER 2810.
-   * Pinning both to the wider one stretched ENGINEER by 15% and it came out
-   * visibly heavier than the line above it; splitting the difference squeezes
-   * one by 6.6% and opens the other by 7.7%, so the two lines carry the same
-   * apparent weight and read as a single block.
-   */
-  width: 3026,
+  width: 3241,
   /** Alumni Sans, from the font's own OS/2 table. */
   cap: 591,
-  /** 0.84em of leading — the two lines read as one block, not two words. */
-  lead: 840,
 } as const;
-
-const LINES = [
-  { word: "SOFTWARE", baseline: HEAD.cap },
-  { word: "ENGINEER", baseline: HEAD.cap + HEAD.lead },
-] as const;
 
 /**
  * Displacement in user units at full tilt. The viewBox is 3026 wide, so this
@@ -160,10 +154,10 @@ export default function HeroHeadline() {
   return (
     <svg
       ref={svgRef}
-      viewBox={`0 0 ${HEAD.width} ${HEAD.cap + HEAD.lead}`}
+      viewBox={`0 0 ${HEAD.width} ${HEAD.cap}`}
       className="block w-full fill-current text-ink"
       role="img"
-      aria-label="Software Engineer"
+      aria-label="Software"
     >
       <defs>
         <filter
@@ -194,19 +188,16 @@ export default function HeroHeadline() {
       </defs>
 
       <g ref={groupRef}>
-        {LINES.map(({ word, baseline }) => (
-          <text
-            key={word}
-            x={0}
-            y={baseline}
-            textLength={HEAD.width}
-            lengthAdjust="spacingAndGlyphs"
-            className="display"
-            fontSize={1000}
-          >
-            {word}
-          </text>
-        ))}
+        <text
+          x={0}
+          y={HEAD.cap}
+          textLength={HEAD.width}
+          lengthAdjust="spacingAndGlyphs"
+          className="display"
+          fontSize={1000}
+        >
+          SOFTWARE
+        </text>
       </g>
     </svg>
   );

@@ -12,17 +12,10 @@ import { brand, links } from "../data/profile";
 
 
 /**
- * Two readings of the line under the headline. The giant type already says
- * "software engineer", so repeating the discipline underneath is close to
- * saying it twice; the alternative spends the line on the one fact nothing
- * else on the page carries.
+ * What the work is made of. This replaces the positioning line that used to
+ * sit here, which repeated in words what the headline already says in type.
  */
-const SUBLINE = {
-  positioning: brand.positioning,
-  proof: `Нэг нь захиалагчийн production дээр ажиллаж байна.`,
-} as const;
-
-const HERO_SUBLINE = SUBLINE.positioning;
+const TRIO = ["INTERFACE", "SYSTEMS", "AI"] as const;
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -65,7 +58,7 @@ export default function Hero() {
     <section
       ref={root}
       id="top"
-      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-6 pt-24"
+      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-6 pt-36"
     >
       <Scene3D />
       <div
@@ -85,15 +78,39 @@ export default function Hero() {
         </div>
 
         {/* The title is the message — everything else supports it. */}
-        <h1 className="mt-8">
+        <h1 className="mt-6">
           <span className="hero-line block overflow-hidden">
             <HeroHeadline />
           </span>
 
-          <span className="mt-6 block text-base text-ink-2 md:text-lg">
-            {HERO_SUBLINE}
+          {/*
+            The second word is deliberately small and still against the first.
+            13.5cqi of the column, times ENGINEER's own width of 2.81em, puts
+            it at about 38% of the measure — a counterweight, not a second
+            headline.
+          */}
+          <span className="hero-line mt-1 block overflow-hidden text-center">
+            <span className="display block text-ink [font-size:13.5cqi] [line-height:0.9]">
+              ENGINEER
+            </span>
           </span>
         </h1>
+
+        {/*
+          Three words for the three things the work is made of. The dots are
+          structural here, holding a row apart — not the "A · B · C" meta line
+          that got deleted everywhere else on the site.
+        */}
+        <div className="label mt-5 flex items-center justify-center gap-4 text-ink-2 sm:gap-8">
+          {TRIO.map((word, i) => (
+            <span key={word} className="flex items-center gap-4 sm:gap-8">
+              {i > 0 && (
+                <span aria-hidden className="h-1 w-1 rounded-full bg-ink-3" />
+              )}
+              {word}
+            </span>
+          ))}
+        </div>
 
         {/*
           The paragraph, the two buttons and the four statistics all used to
