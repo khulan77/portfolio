@@ -33,7 +33,18 @@ function CardShell({
 }) {
   const className = "group flex h-full flex-col border border-line bg-bg-2";
   return href ? (
-    <a href={href} target="_blank" rel="noreferrer" className={className}>
+    /*
+      The whole card is one link to a running site, and nothing inside it says
+      so until you reach the host name at the bottom. The word rides in the
+      cursor instead, where the reader is already looking.
+    */
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      data-cursor-label="Open"
+      className={className}
+    >
       {children}
     </a>
   ) : (

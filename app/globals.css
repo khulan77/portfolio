@@ -459,15 +459,36 @@ body {
 /* ============================================================
    CURSOR
    ============================================================ */
+/*
+ * The layer takes the class of whichever act the pointer is over, so the
+ * cursor is drawn from that act's own palette. It must borrow the colours
+ * without also taking the act's ground — hence the transparent override,
+ * which wins on specificity rather than on !important.
+ */
+.cursor-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.cursor-layer.act-light,
+.cursor-layer.act-dark {
+  background: transparent;
+}
+/* Off the window entirely: the cursor used to freeze at the edge it left by. */
+.cursor-layer.is-out {
+  opacity: 0;
+}
+
 .cursor-dot,
 .cursor-ring {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  pointer-events: none;
-  z-index: 9999;
   will-change: transform;
 }
+
 /* Drawn in ink. In the accent it was a sixth copper mark on the screen, and
    it reads as a stray dot whenever it settles inside a counter — the bowl of
    an O, say — rather than as a pointer. */
@@ -477,19 +498,50 @@ body {
   border-radius: 9999px;
   background: var(--ink);
 }
+
+/* `scale` is its own property, so the press can compress the ring without
+   touching the transform JS writes to it every frame. */
 .cursor-ring {
+  display: grid;
+  place-items: center;
   width: 32px;
   height: 32px;
   border-radius: 9999px;
   border: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
-  transition: width 0.25s ease, height 0.25s ease, background 0.25s ease,
-    border-color 0.25s ease, border-radius 0.25s ease;
+  transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease,
+    border-color 0.25s ease, scale 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .cursor-ring.is-hover {
   width: 58px;
   height: 58px;
-  background: var(--accent-soft);
+  background-color: var(--accent-soft);
   border-color: var(--accent);
+}
+/*
+ * Where the ring carries a word it inverts to ink rather than filling with
+ * copper — a solid accent disc following the pointer would outweigh every
+ * other accent mark on the screen at once.
+ */
+.cursor-ring.is-label {
+  width: 74px;
+  height: 74px;
+  background-color: var(--ink);
+  border-color: var(--ink);
+}
+.cursor-ring.is-down {
+  scale: 0.82;
+}
+
+.cursor-label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  line-height: 1;
+  color: var(--bg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.cursor-ring.is-label .cursor-label {
+  opacity: 1;
 }
 
 /* ============================================================
