@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import Mark from "./Mark";
-import { EASE, T } from "../lib/motion";
+import { gsap } from "gsap";
+import { E, EASE, T } from "../lib/motion";
 import { activeSocials, brand, links } from "../data/profile";
 
 /**
@@ -25,11 +26,13 @@ const MENU_ITEMS = [
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
 
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
@@ -44,9 +47,24 @@ export default function Nav() {
     );
 
     let frame = 0;
+    let lastY = window.scrollY;
+
     const update = () => {
       frame = 0;
-      setScrolled(window.scrollY > 24);
+      const y = window.scrollY;
+      setScrolled(y > 24);
+
+      /*
+       * The bar leaves on the way down and comes back on the way up. Reading
+       * downward is the one time nobody wants navigation in the way; reaching
+       * for it is always an upward gesture.
+       */
+      const delta = y - lastY;
+      if (Math.abs(delta) > 6) {
+        setHidden(y > 160 && delta > 0);
+        lastY = y;
+      }
+
       let current = "";
       sections.forEach((section, i) => {
         if (section && section.getBoundingClientRect().top <= 160) {
@@ -64,6 +82,65 @@ export default function Nav() {
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  /**
+   * The destinations lean toward the pointer as it crosses the bar. The pull
+   * falls off with distance and is capped at six pixels — far enough to feel
+   * the bar respond, not far enough to move a word away from the cursor
+   * chasing it.
+   */
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+    if (
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    const links = Array.from(
+      bar.querySelectorAll<HTMLElement>("[data-magnetic]"),
+    );
+    if (!links.length) return;
+
+    const setters = links.map((el) => ({
+      el,
+      x: gsap.quickTo(el, "x", { duration: T.fast, ease: E.out }),
+      y: gsap.quickTo(el, "y", { duration: T.fast, ease: E.out }),
+    }));
+
+    const RADIUS = 170;
+    const PULL = 0.22;
+    const CAP = 6;
+
+    const onMove = (event: PointerEvent) => {
+      for (const { el, x, y } of setters) {
+        const r = el.getBoundingClientRect();
+        const dx = event.clientX - (r.left + r.width / 2);
+        const dy = event.clientY - (r.top + r.height / 2);
+        const dist = Math.hypot(dx, dy);
+        const falloff = Math.max(0, 1 - dist / RADIUS);
+        x(gsap.utils.clamp(-CAP, CAP, dx * PULL * falloff));
+        y(gsap.utils.clamp(-CAP, CAP, dy * PULL * falloff));
+      }
+    };
+
+    const onLeave = () => {
+      for (const { x, y } of setters) {
+        x(0);
+        y(0);
+      }
+    };
+
+    bar.addEventListener("pointermove", onMove);
+    bar.addEventListener("pointerleave", onLeave);
+    return () => {
+      bar.removeEventListener("pointermove", onMove);
+      bar.removeEventListener("pointerleave", onLeave);
+      for (const { el } of setters) gsap.set(el, { x: 0, y: 0 });
     };
   }, []);
 
@@ -132,8 +209,8 @@ export default function Nav() {
   return (
     <motion.header
       initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: T.base, ease: EASE.out, delay: T.stagger * 2 }}
+      animate={{ y: !open && hidden ? "-105%" : 0, opacity: 1 }}
+      transition={{ duration: T.base, ease: EASE.out }}
       className="fixed inset-x-0 top-0 z-50"
     >
       <div
@@ -143,9 +220,10 @@ export default function Nav() {
             : "border-b border-transparent"
         }`}
       >
-        <div className="bleed flex items-center justify-between py-7">
+        <div ref={barRef} className="bleed flex items-center justify-between py-7">
           <a
             href="#top"
+            data-magnetic
             className="group flex items-center gap-3"
             aria-label="Home"
           >
@@ -155,17 +233,36 @@ export default function Nav() {
             </span>
           </a>
 
+          {/*
+            While the panel is open the same five words are set across the
+            whole screen behind it. Leaving them in the bar as well would print
+            the list twice, so they step aside for the panel and come back when
+            it closes.
+          */}
           <nav
             className="hidden items-center gap-8 md:flex"
             aria-label="Sections"
+            aria-hidden={open}
           >
-            {MENU_ITEMS.map((item) => {
+            {MENU_ITEMS.map((item, i) => {
               const isActive = active === item.href;
               return (
-                <a
+                <motion.a
                   key={item.href}
                   href={item.href}
+                  data-magnetic
+                  tabIndex={open ? -1 : undefined}
                   aria-current={isActive ? "true" : undefined}
+                  animate={{
+                    opacity: open ? 0 : 1,
+                    y: open ? -10 : 0,
+                    filter: open ? "blur(6px)" : "blur(0px)",
+                  }}
+                  transition={{
+                    duration: T.fast,
+                    ease: EASE.out,
+                    delay: open ? i * (T.stagger / 2) : T.stagger + i * (T.stagger / 2),
+                  }}
                   className={`label relative py-1 transition-colors ${
                     isActive ? "text-ink" : "hover:text-ink"
                   }`}
@@ -178,7 +275,7 @@ export default function Nav() {
                       className="absolute inset-x-0 -bottom-0.5 h-px bg-signal"
                     />
                   )}
-                </a>
+                </motion.a>
               );
             })}
           </nav>
