@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { E, T, armReveal, clearReveal } from "../lib/motion";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
+import HeroHeadline from "./HeroHeadline";
 import Scene3D from "./Scene3D";
 import Magnetic from "./Magnetic";
 import { brand, links } from "../data/profile";
@@ -22,28 +23,6 @@ const FACTS = [
   { k: "AI in production", v: `${metrics.withAi} of them` },
 ];
 
-/**
- * The headline is set as SVG so both lines can be locked to the same measure.
- * In HTML they were sized from each line's own natural width, which left them
- * ragged on the right; textLength pins each line to the viewBox instead, so
- * the two words form one hard rectangle.
- *
- * Numbers come from the font: Alumni Sans has a cap height of 0.591em, and the
- * viewBox is the natural width of the wider line at font-size 1000.
- */
-const HEAD = {
-  /*
-   * Halfway between the two natural widths — SOFTWARE 3241, ENGINEER 2810.
-   * Pinning both to the wider one stretched ENGINEER by 15% and it came out
-   * visibly heavier than the line above it; splitting the difference squeezes
-   * one by 6.6% and opens the other by 7.7%, so the two lines carry the same
-   * apparent weight and read as a single block.
-   */
-  width: 3026,
-  cap: 591,
-  /** 0.84em of leading — the two lines read as one block, not two words. */
-  lead: 840,
-} as const;
 
 /**
  * Two readings of the line under the headline. The giant type already says
@@ -121,29 +100,7 @@ export default function Hero() {
         {/* The title is the message — everything else supports it. */}
         <h1 className="mt-8">
           <span className="hero-line block overflow-hidden">
-            <svg
-              viewBox={`0 0 ${HEAD.width} ${HEAD.cap + HEAD.lead}`}
-              className="block w-full fill-current text-ink"
-              role="img"
-              aria-label="Software Engineer"
-            >
-              {[
-                { word: "SOFTWARE", y: HEAD.cap },
-                { word: "ENGINEER", y: HEAD.cap + HEAD.lead },
-              ].map(({ word, y: baseline }) => (
-                <text
-                  key={word}
-                  x={0}
-                  y={baseline}
-                  textLength={HEAD.width}
-                  lengthAdjust="spacingAndGlyphs"
-                  className="display"
-                  fontSize={1000}
-                >
-                  {word}
-                </text>
-              ))}
-            </svg>
+            <HeroHeadline />
           </span>
 
           <span className="mt-6 block text-base text-ink-2 md:text-lg">
