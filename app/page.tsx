@@ -1,3 +1,4 @@
+import Intro from "./components/Intro";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Work from "./components/Work";
@@ -21,6 +22,8 @@ import Contact from "./components/Contact";
 export default function Home() {
   return (
     <>
+      <Intro />
+
       <Nav />
       {/*
         Three acts. Each wrapper carries a complete palette, so the seam

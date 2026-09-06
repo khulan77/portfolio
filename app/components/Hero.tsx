@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { E, T, armReveal, clearReveal } from "../lib/motion";
+import { INTRO_DONE } from "./Intro";
 import { motion, useScroll, useTransform } from "framer-motion";
 import HeroHeadline from "./HeroHeadline";
 import Seal from "./Seal";
@@ -40,13 +41,28 @@ export default function Hero() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const lines = gsap.utils.toArray<HTMLElement>(".hero-line > *");
         armReveal(lines);
-        gsap.from(lines, {
+
+        const tween = gsap.from(lines, {
           yPercent: 108,
           duration: T.slow,
           ease: E.out,
           stagger: T.stagger,
+          paused: true,
           onComplete: () => clearReveal(lines),
         });
+
+        /*
+         * Held until the intro panel has lifted. Playing underneath it would
+         * spend the one movement this page gets where nobody can see it.
+         */
+        const state = document.documentElement.dataset.intro;
+        if (state === "running") {
+          window.addEventListener(INTRO_DONE, () => tween.play(), {
+            once: true,
+          });
+        } else {
+          tween.play();
+        }
       });
 
       return () => mm.revert();
