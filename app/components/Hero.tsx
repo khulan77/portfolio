@@ -157,7 +157,7 @@ export default function Hero() {
           </span>
 
           <a
-            href="#work"
+            href="#about"
             className="label group hidden flex-col items-center gap-1 transition-colors hover:text-ink sm:flex"
           >
             Scroll to explore

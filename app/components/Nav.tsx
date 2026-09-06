@@ -15,10 +15,15 @@ import { activeSocials, brand, links } from "../data/profile";
  *
  * Every href must match a section actually rendered in page.tsx — "#ai"
  * outlived its section once and became a link to nowhere.
+ *
+ * The order has to match the page's too, and not only so the list reads in
+ * the order it is met: the active destination is resolved by taking the last
+ * entry whose section has passed under the bar, walking this array. Out of
+ * step with the document, that marks a section the reader has already left.
  */
 const MENU_ITEMS = [
-  { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
+  { label: "Work", href: "#work" },
   { label: "Stack", href: "#stack" },
   { label: "Process", href: "#process" },
   { label: "Contact", href: "#contact" },

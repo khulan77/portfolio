@@ -36,8 +36,8 @@ export default function Home() {
         </div>
 
         <div className="act-dark">
-          <Work />
           <About />
+          <Work />
           <Stack />
           <Process />
         </div>
