@@ -297,6 +297,35 @@ body {
   }
 }
 
+/*
+ * The caret in the opening panel. It holds steady while characters are
+ * arriving and blinks only once the word has been typed out — a caret that
+ * blinks through its own typing reads as a cursor sitting on a finished line
+ * rather than as a hand at work.
+ */
+@keyframes intro-caret {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  52%,
+  100% {
+    opacity: 0;
+  }
+}
+.intro-caret {
+  display: inline-block;
+  width: 0.055em;
+  height: 0.72em;
+  margin-left: 0.08em;
+  background: currentColor;
+  animation: intro-caret 0.9s steps(1) infinite;
+}
+.intro-caret.is-typing {
+  animation: none;
+  opacity: 1;
+}
+
 /* Portfolios fail from being cramped, not from having air. */
 .section-y {
   padding-block: clamp(6rem, 14vh, 11rem);
@@ -577,6 +606,7 @@ body {
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .pulse-ring,
+  .intro-caret,
   .seal { animation: none !important; }
   .btn:hover { transform: none; }
   * { scroll-behavior: auto !important; }

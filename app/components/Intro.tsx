@@ -6,12 +6,18 @@ import { gsap } from "gsap";
 import { E, T } from "../lib/motion";
 
 /**
- * The way in. A greeting in her own language turns over into English — the
- * same roll the destinations in the bar do, so the first thing the site shows
- * is a move it repeats — and then the panel lifts off the page.
+ * The way in. A count runs to 100, a greeting is typed under it, and the panel
+ * lifts off the page to leave the hero.
  *
- * It is deliberately short and deliberately rare. The preloader this replaces
- * was removed for holding up the first paint, so this one:
+ * The count is paced rather than measured — there is no byte total worth
+ * reporting on a static page. What it is honest about is the release: the
+ * panel will not lift until the display face has loaded, because the hero's
+ * headline is SVG sized to Alumni Sans' own measured width, and painting it in
+ * a fallback face halves it in front of the reader. So the count is the
+ * theatre and `document.fonts.ready` is the actual gate — with a cap, so a
+ * font that never arrives cannot trap anyone behind this panel.
+ *
+ * It stays deliberately rare:
  *   - plays once per session, not on every navigation back from a case study
  *   - never plays under prefers-reduced-motion
  *   - is markup, not a spinner, so whatever it paints is real content
@@ -23,6 +29,9 @@ import { E, T } from "../lib/motion";
 
 const SEEN_KEY = "intro-seen";
 export const INTRO_DONE = "intro:done";
+
+/** What the caret types. */
+const GREETING = "Hello";
 
 function shouldSkip() {
   if (typeof window === "undefined") return false;
@@ -56,6 +65,10 @@ function announce() {
 
 export default function Intro() {
   const root = useRef<HTMLDivElement>(null);
+  const countRef = useRef<HTMLSpanElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const typedRef = useRef<HTMLSpanElement>(null);
+  const caretRef = useRef<HTMLSpanElement>(null);
   const [gone, setGone] = useState(false);
 
   useGSAP(
@@ -68,6 +81,12 @@ export default function Intro() {
         return;
       }
 
+      const countEl = countRef.current;
+      const barEl = barRef.current;
+      const typedEl = typedRef.current;
+      const caretEl = caretRef.current;
+      if (!countEl || !barEl || !typedEl || !caretEl) return;
+
       const previousOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
 
@@ -79,42 +98,81 @@ export default function Intro() {
         },
       });
 
-      // The second word waits one line below the mask. Set here rather than in
-      // CSS so GSAP owns the transform outright and nothing fights it.
-      gsap.set(".intro-en", { yPercent: 100 });
+      /*
+       * One tween owns both the number and the rule, so the two cannot drift
+       * apart: a second tween on the same duration would still round its
+       * frames independently and show 97 against a full bar.
+       */
+      const count = { value: 0 };
+      tl.to(count, {
+        value: 100,
+        duration: T.slow,
+        ease: E.soft,
+        snap: { value: 1 },
+        onUpdate: () => {
+          countEl.textContent = String(count.value);
+          barEl.style.transform = `scaleX(${count.value / 100})`;
+        },
+      });
 
       /*
-       * Positions on the timeline, derived rather than typed: the greeting
-       * turns over before it has finished settling, and the panel starts
-       * lifting as the turn ends. The whole thing is over in about 1.5s: this
-       * replaces a preloader that was cut for holding up the first paint, so
-       * it has to be a greeting, not a wait.
+       * Typed rather than revealed. A single tween across the string types at
+       * a machine's perfectly even rate; the rest between two keystrokes is
+       * what carries a hand, so each character is its own step and each step
+       * is a different length — scaled from the stagger the rest of the site
+       * uses, not a number invented here.
        */
-      const TURN_AT = T.base * 0.6;
-      const LIFT_AT = TURN_AT + T.fast;
-
-      tl.from(".intro-greeting", {
-        opacity: 0,
-        y: 28,
-        filter: "blur(14px)",
-        duration: T.base,
-        ease: E.out,
-      })
-        .to(
-          ".intro-mn",
-          { yPercent: -100, duration: T.fast, ease: E.out },
-          TURN_AT,
-        )
-        .to(
-          ".intro-en",
-          { yPercent: 0, duration: T.fast, ease: E.out },
-          TURN_AT,
-        )
-        .to(
-          root.current,
-          { yPercent: -100, duration: T.base, ease: E.snap },
-          LIFT_AT,
+      tl.call(() => caretEl.classList.add("is-typing"), undefined, "+=" + T.fast);
+      for (let i = 1; i <= GREETING.length; i++) {
+        const rest = T.stagger * (0.55 + Math.random());
+        tl.call(
+          () => {
+            typedEl.textContent = GREETING.slice(0, i);
+          },
+          undefined,
+          "+=" + rest,
         );
+      }
+      tl.call(() => caretEl.classList.remove("is-typing"));
+
+      /*
+       * The gate. `waiting` exists because the promise can settle either side
+       * of the timeline reaching this point, and a pause added unconditionally
+       * would strand the visitor whenever the font was already cached.
+       */
+      let fontsReady = false;
+      let waiting = false;
+
+      const release = () => {
+        fontsReady = true;
+        if (!waiting) return;
+        waiting = false;
+        tl.resume();
+      };
+
+      document.fonts?.ready.then(release);
+      /*
+       * A face that never loads must not hold the page shut. The cap is set
+       * past the point the timeline reaches the gate — set any tighter and it
+       * fires first every time, which is the same as having no gate at all.
+       */
+      gsap.delayedCall(T.slow * 3, release);
+
+      tl.call(
+        () => {
+          if (fontsReady) return;
+          waiting = true;
+          tl.pause();
+        },
+        undefined,
+        "+=" + T.fast,
+      );
+
+      tl.to(root.current, {
+        yPercent: -100,
+        duration: T.base,
+        ease: E.snap,
+      });
 
       return () => {
         document.body.style.overflow = previousOverflow;
@@ -129,15 +187,26 @@ export default function Intro() {
     <div
       ref={root}
       aria-hidden
-      className="act-light fixed inset-0 z-[60] grid place-items-center"
+      className="act-light fixed inset-0 z-[60] flex flex-col"
     >
-      {/* One line tall, with the English waiting just under the edge of it.
-          leading is a little over 1 so the descender of "у" is not clipped. */}
-      <div className="intro-greeting relative overflow-hidden text-[clamp(2.5rem,9vw,7rem)] leading-[1.12]">
-        <span className="display intro-mn block text-ink">Сайн уу</span>
-        <span className="display intro-en absolute inset-0 block text-ink">
-          Hello
+      {/* The greeting holds the middle of the screen, the way the hero's
+          headline does once this panel has gone. */}
+      <div className="flex flex-1 items-center justify-center px-6">
+        <span className="display text-[clamp(2.5rem,9vw,7rem)] leading-[1.12] text-ink">
+          <span ref={typedRef} />
+          <span ref={caretRef} className="intro-caret" />
         </span>
+      </div>
+
+      {/* The count sits in the same gutter the hero's corners are pinned to,
+          so the panel and the page underneath share one left edge. */}
+      <div className="bleed pb-8">
+        <div className="mono text-sm text-ink-2">
+          <span ref={countRef}>0</span>%
+        </div>
+        <div className="mt-4 h-px bg-line">
+          <div ref={barRef} className="h-px origin-left scale-x-0 bg-ink" />
+        </div>
       </div>
     </div>
   );
