@@ -263,16 +263,21 @@ export default function Nav() {
                     ease: EASE.out,
                     delay: open ? i * (T.stagger / 2) : T.stagger + i * (T.stagger / 2),
                   }}
-                  className={`label relative py-1 transition-colors ${
+                  className={`nav-roll label relative py-1 transition-colors ${
                     isActive ? "text-ink" : "hover:text-ink"
                   }`}
                 >
-                  {item.label}
+                  <span className="roll-mask relative">
+                    <span className="roll-out">{item.label}</span>
+                    <span className="roll-in" aria-hidden>
+                      {item.label}
+                    </span>
+                  </span>
                   {isActive && (
                     <motion.span
                       layoutId="nav-active"
                       transition={{ type: "spring", stiffness: 400, damping: 34 }}
-                      className="absolute inset-x-0 -bottom-0.5 h-px bg-signal"
+                      className="absolute inset-x-0 bottom-0 h-px bg-signal"
                     />
                   )}
                 </motion.a>
@@ -300,7 +305,7 @@ export default function Nav() {
                 }`}
               />
             </span>
-            {open ? "Close" : "Menu"}
+            {open ? "" : ""}
           </button>
         </div>
       </div>

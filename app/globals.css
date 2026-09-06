@@ -258,6 +258,45 @@ body {
   container-type: inline-size;
 }
 
+/*
+ * A destination rolls on hover: the word leaves upward while its own copy
+ * arrives from below. Transform only, and only where a pointer can actually
+ * hover — without the guard a tap leaves the word stuck half-rolled.
+ *
+ * The timings mirror T and E in app/lib/motion.ts; CSS cannot read the module,
+ * so the two are kept in step by hand.
+ */
+.roll-mask {
+  display: block;
+  overflow: hidden;
+}
+.roll-out,
+.roll-in {
+  display: block;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.roll-in {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+}
+
+@media (hover: hover) {
+  .nav-roll:hover .roll-out {
+    transform: translateY(-100%);
+  }
+  .nav-roll:hover .roll-in {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roll-out,
+  .roll-in {
+    transition: none;
+  }
+}
+
 /* Portfolios fail from being cramped, not from having air. */
 .section-y {
   padding-block: clamp(6rem, 14vh, 11rem);
