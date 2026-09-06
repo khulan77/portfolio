@@ -143,7 +143,7 @@ export default function Nav() {
             : "border-b border-transparent"
         }`}
       >
-        <div className="shell flex items-center justify-between py-7">
+        <div className="bleed flex items-center justify-between py-7">
           <a
             href="#top"
             className="group flex items-center gap-3"
@@ -235,7 +235,7 @@ export default function Nav() {
             />
 
             <nav
-              className="shell relative flex-1 overflow-y-auto"
+              className="bleed relative flex-1 overflow-y-auto"
               aria-label="All sections"
             >
               {MENU_ITEMS.map((item, i) => {
@@ -270,7 +270,7 @@ export default function Nav() {
               })}
             </nav>
 
-            <div className="shell relative flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-6">
+            <div className="bleed relative flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-6">
               <a
                 href={links.emailHref}
                 className="mono text-sm text-ink-2 transition-colors hover:text-ink"

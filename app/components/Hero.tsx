@@ -8,7 +8,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import HeroHeadline from "./HeroHeadline";
 import Seal from "./Seal";
 import Scene3D from "./Scene3D";
-import { brand, links } from "../data/profile";
+import { brand } from "../data/profile";
 
 /**
  * What the work is made of, set as a triangle: the apex over the gap between
@@ -64,7 +64,7 @@ export default function Hero() {
       <section
         ref={root}
         id="top"
-        className="relative flex min-h-[78svh] flex-col justify-center overflow-hidden pt-28 pb-10"
+        className="relative flex min-h-[100svh] flex-col overflow-hidden pt-32 pb-8"
       >
         <Scene3D />
         <div
@@ -72,17 +72,8 @@ export default function Hero() {
           aria-hidden
         />
 
-        <motion.div style={{ y, opacity }} className="bleed">
-          <div className="label flex items-center gap-3 text-ink-2">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="pulse-ring absolute inline-flex h-full w-full rounded-full bg-signal" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
-            </span>
-            Available for new work
-            <span className="ml-auto hidden md:block">{brand.school}</span>
-          </div>
-
-          <h1 className="mt-4">
+        <motion.div style={{ y, opacity }} className="bleed my-auto">
+          <h1>
             <span className="hero-line block overflow-hidden">
               <HeroHeadline />
             </span>
@@ -120,23 +111,37 @@ export default function Hero() {
             </span>
           </div>
         </motion.div>
+
+        {/*
+          The corners. Type owns the middle of the screen; everything that is
+          not type is pushed to an edge — the year and name left, the way down
+          in the centre, and the seal with the place under it on the right.
+        */}
+        <div className="bleed flex items-end justify-between gap-6">
+          <span className="label whitespace-nowrap">
+            © {new Date().getFullYear()} {brand.name}
+          </span>
+
+          <a
+            href="#work"
+            className="label group hidden flex-col items-center gap-1 transition-colors hover:text-ink sm:flex"
+          >
+            Scroll to explore
+            <span
+              aria-hidden
+              className="transition-transform duration-500 group-hover:translate-y-0.5"
+            >
+              ↓
+            </span>
+          </a>
+
+          <div className="flex flex-col items-center gap-2">
+            <Seal className="h-20 w-20 shrink-0 md:h-24 md:w-24" />
+            <span className="label whitespace-nowrap">Улаанбаатар</span>
+          </div>
+        </div>
       </section>
 
-      {/* Outside the hero: where she is, how to reach her, and the seal. */}
-      <div className="shell flex items-end justify-between gap-8 border-t border-line py-8">
-        <div className="flex flex-col gap-1">
-          <span className="label">Улаанбаатар</span>
-          <span className="label">Алсын зайд нээлттэй</span>
-          <a
-            href={links.emailHref}
-            className="mono mt-3 text-sm text-ink-2 transition-colors hover:text-ink"
-          >
-            {links.email}
-          </a>
-        </div>
-
-        <Seal className="h-24 w-24 shrink-0 md:h-28 md:w-28" />
-      </div>
     </>
   );
 }
