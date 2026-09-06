@@ -3,20 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-
-/**
- * Deterministic PRNG (mulberry32) so the lattice is identical on every render
- * and between server and client.
- */
-function seededRandom(seed: number) {
-  let state = seed;
-  return () => {
-    state = (state + 0x6d2b79f5) | 0;
-    let t = Math.imul(state ^ (state >>> 15), 1 | state);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+import { seededRandom } from "../lib/seeded-random";
 
 /**
  * The lattice lives in the hero, and the hero is Act I — chalk — for the life
