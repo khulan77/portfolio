@@ -418,11 +418,14 @@ body {
   z-index: 9999;
   will-change: transform;
 }
+/* Drawn in ink. In the accent it was a sixth copper mark on the screen, and
+   it reads as a stray dot whenever it settles inside a counter — the bowl of
+   an O, say — rather than as a pointer. */
 .cursor-dot {
   width: 5px;
   height: 5px;
   border-radius: 9999px;
-  background: var(--accent);
+  background: var(--ink);
 }
 .cursor-ring {
   width: 32px;

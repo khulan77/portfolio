@@ -11,12 +11,52 @@ import Magnetic from "./Magnetic";
 import { brand, links } from "../data/profile";
 import { metrics } from "../data/projects";
 
+/**
+ * Two, not four. "Stack" and "Working" were repeated in full further down the
+ * page — the Stack section lists all 37, About states the working languages —
+ * so in the hero they were filling a corner rather than telling anyone
+ * anything. Both numbers are counted from the data, never typed.
+ */
 const FACTS = [
   { k: "Shipped", v: `${metrics.shipped} projects` },
   { k: "AI in production", v: `${metrics.withAi} of them` },
-  { k: "Stack", v: "Next.js, TypeScript, Postgres" },
-  { k: "Working", v: "EN / MN" },
 ];
+
+/**
+ * The headline is set as SVG so both lines can be locked to the same measure.
+ * In HTML they were sized from each line's own natural width, which left them
+ * ragged on the right; textLength pins each line to the viewBox instead, so
+ * the two words form one hard rectangle.
+ *
+ * Numbers come from the font: Alumni Sans has a cap height of 0.591em, and the
+ * viewBox is the natural width of the wider line at font-size 1000.
+ */
+const HEAD = {
+  /*
+   * Halfway between the two natural widths — SOFTWARE 3241, ENGINEER 2810.
+   * Pinning both to the wider one stretched ENGINEER by 15% and it came out
+   * visibly heavier than the line above it; splitting the difference squeezes
+   * one by 6.6% and opens the other by 7.7%, so the two lines carry the same
+   * apparent weight and read as a single block.
+   */
+  width: 3026,
+  cap: 591,
+  /** 0.84em of leading — the two lines read as one block, not two words. */
+  lead: 840,
+} as const;
+
+/**
+ * Two readings of the line under the headline. The giant type already says
+ * "software engineer", so repeating the discipline underneath is close to
+ * saying it twice; the alternative spends the line on the one fact nothing
+ * else on the page carries.
+ */
+const SUBLINE = {
+  positioning: brand.positioning,
+  proof: `Нэг нь захиалагчийн production дээр ажиллаж байна.`,
+} as const;
+
+const HERO_SUBLINE = SUBLINE.positioning;
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -39,7 +79,7 @@ export default function Hero() {
        * else does.
        */
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const lines = gsap.utils.toArray<HTMLElement>(".hero-line > span");
+        const lines = gsap.utils.toArray<HTMLElement>(".hero-line > svg");
         armReveal(lines);
         gsap.from(lines, {
           yPercent: 108,
@@ -80,27 +120,34 @@ export default function Hero() {
 
         {/* The title is the message — everything else supports it. */}
         <h1 className="mt-8">
-          {/* --fit is the measured width of each string; see .fit-line */}
-          <span className="display block">
-            <span className="hero-line block overflow-hidden">
-              <span className="fit-line" style={{ "--fit": 2.8810 } as React.CSSProperties}>
-                SOFTWARE
-              </span>
-            </span>
-            <span className="hero-line block overflow-hidden">
-              <span className="fit-line" style={{ "--fit": 2.6590 } as React.CSSProperties}>
-                ENGINEER<span className="text-signal">.</span>
-              </span>
-            </span>
+          <span className="hero-line block overflow-hidden">
+            <svg
+              viewBox={`0 0 ${HEAD.width} ${HEAD.cap + HEAD.lead}`}
+              className="block w-full fill-current text-ink"
+              role="img"
+              aria-label="Software Engineer"
+            >
+              {[
+                { word: "SOFTWARE", y: HEAD.cap },
+                { word: "ENGINEER", y: HEAD.cap + HEAD.lead },
+              ].map(({ word, y: baseline }) => (
+                <text
+                  key={word}
+                  x={0}
+                  y={baseline}
+                  textLength={HEAD.width}
+                  lengthAdjust="spacingAndGlyphs"
+                  className="display"
+                  fontSize={1000}
+                >
+                  {word}
+                </text>
+              ))}
+            </svg>
           </span>
-          <span className="hero-line mt-6 block overflow-hidden">
-            {/* Two claims, not three: "Creative Developer" was the one that
-                described no distinct capability the other two did not cover. */}
-            <span className="block text-base text-ink-2 md:text-lg">
-              {/* The separator is punctuation, not emphasis — in the accent it
-                  was a sixth orange mark competing inside one screen. */}
-              Full-Stack <span className="text-ink-3">×</span> AI Product Builder
-            </span>
+
+          <span className="mt-6 block text-base text-ink-2 md:text-lg">
+            {HERO_SUBLINE}
           </span>
         </h1>
 

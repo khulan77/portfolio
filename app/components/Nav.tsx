@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import Mark from "./Mark";
 import { EASE, T } from "../lib/motion";
-import { activeSocials } from "../data/profile";
+import { activeSocials, brand } from "../data/profile";
 
 const NAV_ITEMS = [
   { label: "Work", href: "#work" },
@@ -96,8 +96,10 @@ export default function Nav() {
         <div className="shell flex items-center justify-between py-4">
           <a href="#top" className="group flex items-center gap-3" aria-label="Home">
             <Mark className="h-7 w-7 text-ink" />
-            <span className="label hidden text-ink-2 sm:block">
-              Full-Stack × AI
+            {/* The positioning line lives under the headline; repeating it here
+                put the same words twice on one screen. */}
+            <span className="display hidden text-lg leading-none text-ink sm:block">
+              {brand.name}
             </span>
           </a>
 
@@ -132,7 +134,7 @@ export default function Nav() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-label={open ? "Close menu" : "Open menu"}
-              className="label flex h-9 items-center gap-2.5 border border-line px-3 transition-colors hover:border-line-strong hover:text-ink"
+              className="label flex h-9 items-center gap-2.5 border border-line px-3 transition-colors hover:border-line-strong hover:text-ink md:hidden"
             >
               <span className="flex flex-col gap-[3px]">
                 <span
