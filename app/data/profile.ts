@@ -26,7 +26,7 @@ export const SITE_URL = (
 export const brand = {
   name: "Khulan.D",
   positioning: "Full-Stack Engineer × AI Product Builder",
-  role: "Full-Stack Software Engineer",
+  role: "Full-Stack Developer",
   /** The one line the whole site has to earn. */
   statement: "I build AI-powered products and the systems behind them.",
   statementMn:
