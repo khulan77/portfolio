@@ -326,6 +326,18 @@ body {
   opacity: 1;
 }
 
+/*
+ * The bar and the menu float over the page rather than sitting inside an act,
+ * so they carry an act's class to read its palette. Like the cursor layer they
+ * must borrow the colours without taking the ground: the bar paints its own
+ * only once the page has scrolled under it, and the menu paints its own on
+ * open. Wins on specificity rather than on !important.
+ */
+.nav-chrome.act-light,
+.nav-chrome.act-dark {
+  background: transparent;
+}
+
 /* Portfolios fail from being cramped, not from having air. */
 .section-y {
   padding-block: clamp(6rem, 14vh, 11rem);

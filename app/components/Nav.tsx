@@ -24,11 +24,27 @@ const MENU_ITEMS = [
   { label: "Contact", href: "#contact" },
 ];
 
+/**
+ * Where the bar asks which act it is over: a line just below its own height,
+ * so the answer changes as the seam between two acts passes under the bar
+ * rather than when it reaches the top of the screen.
+ */
+const ACT_PROBE = 80;
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
+  /* Which act the bar is currently floating over. The page opens on chalk. */
+  const [dark, setDark] = useState(false);
+  /*
+   * Whether the panel is on screen at all, which is not the same as `open`:
+   * it wipes for T.base on the way out, and the bar has to stay coal for as
+   * long as there is coal behind it. Flipping on `open` alone left the bar's
+   * own words dark on a still-black ground for the whole of that wipe.
+   */
+  const [panelShowing, setPanelShowing] = useState(false);
 
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -45,6 +61,9 @@ export default function Nav() {
     const sections = MENU_ITEMS.map((item) =>
       document.querySelector<HTMLElement>(item.href),
     );
+    const acts = Array.from(
+      document.querySelectorAll<HTMLElement>(".act-light, .act-dark"),
+    );
 
     let frame = 0;
     let lastY = window.scrollY;
@@ -53,6 +72,20 @@ export default function Nav() {
       frame = 0;
       const y = window.scrollY;
       setScrolled(y > 24);
+
+      /*
+       * The bar and the menu sit outside the acts, so without this they read
+       * :root — chalk — for the whole page, and opening the menu from the
+       * coal section inverted the world. The act under the bar's own line is
+       * the one it belongs to.
+       */
+      for (const act of acts) {
+        const box = act.getBoundingClientRect();
+        if (box.top <= ACT_PROBE && box.bottom > ACT_PROBE) {
+          setDark(act.classList.contains("act-dark"));
+          break;
+        }
+      }
 
       /*
        * The bar leaves on the way down and comes back on the way up. Reading
@@ -211,7 +244,18 @@ export default function Nav() {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: !open && hidden ? "-105%" : 0, opacity: 1 }}
       transition={{ duration: T.base, ease: EASE.out }}
-      className="fixed inset-x-0 top-0 z-50"
+      /*
+        Closed, the chrome takes the act it is floating over — without this it
+        read :root for the whole page, which put chalk's ink on the coal
+        sections and left the bar barely visible across most of the site.
+
+        Open, it is coal whichever act is underneath. The menu is not part of
+        an act; it is the one place the page goes dark on purpose, and the bar
+        has to come with it or its own words would stay dark on that ground.
+      */
+      className={`nav-chrome fixed inset-x-0 top-0 z-50 ${
+        dark || panelShowing ? "act-dark" : "act-light"
+      }`}
     >
       <div
         className={`relative z-10 transition-colors duration-500 ${
@@ -288,7 +332,10 @@ export default function Nav() {
           <button
             ref={triggerRef}
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => {
+              if (!open) setPanelShowing(true);
+              setOpen((v) => !v);
+            }}
             aria-expanded={open}
             aria-controls="site-menu"
             className="label flex h-9 items-center gap-2.5 border border-line px-3 text-ink transition-colors hover:border-line-strong"
@@ -317,7 +364,7 @@ export default function Nav() {
         />
       )}
 
-      <AnimatePresence>
+      <AnimatePresence onExitComplete={() => setPanelShowing(false)}>
         {open && (
           <motion.div
             ref={panelRef}
