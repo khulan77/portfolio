@@ -119,12 +119,18 @@ export default function Intro() {
        * Typed rather than revealed. A single tween across the string types at
        * a machine's perfectly even rate; the rest between two keystrokes is
        * what carries a hand, so each character is its own step and each step
-       * is a different length — scaled from the stagger the rest of the site
-       * uses, not a number invented here.
+       * is a different length.
+       *
+       * The rest is drawn around T.fast, the site's own hover interval, which
+       * puts it between roughly a tenth and a fifth of a second — about the
+       * pace of somebody typing rather than of something being played back.
+       * It was scaled from T.stagger before, which is the gap between two
+       * neighbours in a list, and at that rate the word arrived faster than a
+       * hand could have written it.
        */
       tl.call(() => caretEl.classList.add("is-typing"), undefined, "+=" + T.fast);
       for (let i = 1; i <= GREETING.length; i++) {
-        const rest = T.stagger * (0.55 + Math.random());
+        const rest = T.fast * (0.32 + Math.random() * 0.3);
         tl.call(
           () => {
             typedEl.textContent = GREETING.slice(0, i);
