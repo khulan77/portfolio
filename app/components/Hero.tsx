@@ -73,42 +73,52 @@ export default function Hero() {
         />
 
         <motion.div style={{ y, opacity }} className="bleed my-auto">
-          <h1>
-            <span className="hero-line block overflow-hidden">
-              <HeroHeadline />
-            </span>
+          {/*
+            The headline block, inset from the display measure. It carries its
+            own container, so ENGINEER — sized in cqi — scales with SOFTWARE
+            and the two keep their proportion at every width. This one width is
+            the whole headline's size control.
+          */}
+          <div className="mx-auto w-[86%] [container-type:inline-size]">
+            <h1>
+              <span className="hero-line block overflow-hidden">
+                <HeroHeadline />
+              </span>
+
+              {/*
+                The second word is deliberately small and still against the
+                first: 13.5cqi of this block, times ENGINEER's own width of
+                2.81em, puts it at about a third of the line above it. Both
+                are measured against the same box, so they stay in proportion
+                however wide the block is set.
+              */}
+              <span className="hero-line mt-1 block overflow-hidden text-center">
+                <span className="display block text-ink [font-size:13.5cqi] [line-height:0.9]">
+                  ENGINEER
+                </span>
+              </span>
+            </h1>
 
             {/*
-              The second word is deliberately small and still against the
-              first: 13.5cqi of the measure, times ENGINEER's own width of
-              2.81em, puts it at about a third of the line above it.
+              Apex over the gap, base either side of it. Set larger than a
+              label and tracked out: Alumni Sans is narrow enough that at label
+              size three short words stop reading as words.
             */}
-            <span className="hero-line mt-1 block overflow-hidden text-center">
-              <span className="display block text-ink [font-size:13.5cqi] [line-height:0.9]">
-                ENGINEER
+            <div className="relative mt-12 flex items-center justify-center gap-5 text-ink sm:gap-7">
+              <span className="display text-xl tracking-[0.08em] sm:text-2xl">
+                {TRIAD.left}
               </span>
-            </span>
-          </h1>
+              <span aria-hidden className="h-1 w-1 rounded-full bg-ink-3" />
+              <span aria-hidden className="w-8 sm:w-16" />
+              <span aria-hidden className="h-1 w-1 rounded-full bg-ink-3" />
+              <span className="display text-xl tracking-[0.08em] sm:text-2xl">
+                {TRIAD.right}
+              </span>
 
-          {/*
-            Apex over the gap, base either side of it. Set larger than a label
-            would be and tracked out: Alumni Sans is narrow enough that at
-            label size these three words stop reading as words.
-          */}
-          <div className="relative mt-12 flex items-center justify-center gap-5 text-ink sm:gap-7">
-            <span className="display text-xl tracking-[0.08em] sm:text-2xl">
-              {TRIAD.left}
-            </span>
-            <span aria-hidden className="h-1 w-1 rounded-full bg-ink-3" />
-            <span aria-hidden className="w-8 sm:w-16" />
-            <span aria-hidden className="h-1 w-1 rounded-full bg-ink-3" />
-            <span className="display text-xl tracking-[0.08em] sm:text-2xl">
-              {TRIAD.right}
-            </span>
-
-            <span className="display absolute -top-9 left-1/2 -translate-x-1/2 text-xl tracking-[0.08em] sm:text-2xl">
-              {TRIAD.apex}
-            </span>
+              <span className="display absolute -top-9 left-1/2 -translate-x-1/2 text-xl tracking-[0.08em] sm:text-2xl">
+                {TRIAD.apex}
+              </span>
+            </div>
           </div>
         </motion.div>
 
