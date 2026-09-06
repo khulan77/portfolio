@@ -42,9 +42,17 @@ export default function Hero() {
         const lines = gsap.utils.toArray<HTMLElement>(".hero-line > *");
         armReveal(lines);
 
+        /*
+         * Slower than T.slow, which is where the rest of the site tops out.
+         * These two words are the largest thing on the page and they are the
+         * first thing anybody reads; at 1.1s they cleared their masks before
+         * the eye had settled on them. 1.375s is deliberately just under the
+         * 1.4s the motion system names as the point a movement starts reading
+         * as broken — the ceiling, approached on purpose, and only here.
+         */
         const tween = gsap.from(lines, {
           yPercent: 108,
-          duration: T.slow,
+          duration: T.slow * 1.25,
           ease: E.out,
           stagger: T.stagger,
           paused: true,

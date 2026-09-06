@@ -156,18 +156,21 @@ export default function Intro() {
       };
 
       document.fonts?.ready.then(release);
-      /*
-       * A face that never loads must not hold the page shut. The cap is set
-       * past the point the timeline reaches the gate — set any tighter and it
-       * fires first every time, which is the same as having no gate at all.
-       */
-      gsap.delayedCall(T.slow * 3, release);
 
       tl.call(
         () => {
           if (fontsReady) return;
           waiting = true;
           tl.pause();
+          /*
+           * Bounded from here rather than from mount. A cap counted from mount
+           * has to be long enough to clear the whole count and the typing, so
+           * whatever was left of it was dead time the reader sat through. By
+           * this point the greeting itself has been on screen in the display
+           * face for a second, so the face is demonstrably loaded and this is
+           * a guard against a stall, not a wait anybody should ever see.
+           */
+          gsap.delayedCall(T.fast, release);
         },
         undefined,
         // One keystroke's worth of rest: long enough for the finished word to
@@ -190,7 +193,7 @@ export default function Intro() {
        * travelled most of its distance: the headline rises into the last of
        * it, and what the reader sees is one movement rather than a handover.
        */
-      tl.call(announce, undefined, "-=" + T.base * 0.7);
+      tl.call(announce, undefined, "-=" + T.base * 0.8);
 
       return () => {
         document.body.style.overflow = previousOverflow;
