@@ -87,7 +87,9 @@ export default function AboutField() {
   return (
     <div
       ref={wrap}
-      className="relative min-h-60 flex-1 border-b border-line"
+      /* A set height rather than a share of the row: the row is no longer
+         stretched, so there is nothing left over for the field to take. */
+      className="relative h-52 border-b border-line"
       aria-hidden
     >
       <AboutLattice active={visible} progress={progress} />

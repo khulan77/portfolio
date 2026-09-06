@@ -13,34 +13,21 @@ export default function About() {
       />
 
       {/*
-        The panel used to be a small card sitting at the top of a column twice
-        its height, with nothing under it — the one thing on the page that
-        visibly hung. It now runs the full height of the row, so the two
-        columns close on the same line and the section reads as a block rather
-        than as a paragraph with something left over beside it.
+        The panel leads and the prose runs beside it.
+
+        With the prose on the left the row's spare height fell under the left
+        column, which is where the eye returns at the end of every line — it
+        read as something missing rather than as air. On the right it falls
+        where a column of text is expected to end short, and the two blocks
+        are centred against each other so the row sits level however the copy
+        wraps. Their heights cannot be made equal: the paragraph is a fixed
+        length and the panel has an object in it.
       */}
-      <div className="mt-14 grid items-stretch gap-10 md:grid-cols-12 md:gap-16">
-        <Reveal className="md:col-span-7" stagger>
-          <p className="text-lg leading-relaxed text-ink-2 md:text-xl">
-            Асуудлыг нь буруу ойлгочихвол хэчнээн цэвэрхэн код бичсэн ч
-            хамаагүй болдог. Тиймээс одоо эхлээд{" "}
-            <span className="text-ink">асуултаа зөв тавихад</span> л хамгийн
-            их цагаа зарцуулдаг.
-          </p>
-
-          <p className="mt-6 text-[0.9375rem] leading-relaxed text-ink-2">
-            Ихэвчлэн бүтэн системийг ганцаараа барьдаг — дизайн, өгөгдлийн
-            сан, API, deploy. Хамгийн урт бодогддог хэсэг нь ихэнхдээ хамгийн
-            жижиг нь байдаг: Lumière дээр хоёр хүн яг нэг зэрэг ижил цагийг
-            дарвал юу болох вэ гэдгийг шийдэх нь бүх интерфейсээс илүү цаг
-            авсан.
-          </p>
-        </Reveal>
-
+      <div className="mt-14 grid items-center gap-10 md:grid-cols-12 md:gap-16">
         {/* The one place the name appears: signed against the credential it
             belongs to, rather than announced at the top of the page. */}
         <Reveal className="md:col-span-5">
-          <div className="flex h-full flex-col border border-line bg-bg-2">
+          <div className="flex flex-col border border-line bg-bg-2">
             <AboutField />
 
             <div className="p-6">
@@ -72,7 +59,25 @@ export default function About() {
             </div>
           </div>
         </Reveal>
+
+        <Reveal className="md:col-span-7" stagger>
+          <p className="text-lg leading-relaxed text-ink-2 md:text-xl">
+            Асуудлыг нь буруу ойлгочихвол хэчнээн цэвэрхэн код бичсэн ч
+            хамаагүй болдог. Тиймээс одоо эхлээд{" "}
+            <span className="text-ink">асуултаа зөв тавихад</span> л хамгийн
+            их цагаа зарцуулдаг.
+          </p>
+
+          <p className="mt-6 text-[0.9375rem] leading-relaxed text-ink-2">
+            Ихэвчлэн бүтэн системийг ганцаараа барьдаг — дизайн, өгөгдлийн
+            сан, API, deploy. Хамгийн урт бодогддог хэсэг нь ихэнхдээ хамгийн
+            жижиг нь байдаг: Lumière дээр хоёр хүн яг нэг зэрэг ижил цагийг
+            дарвал юу болох вэ гэдгийг шийдэх нь бүх интерфейсээс илүү цаг
+            авсан.
+          </p>
+        </Reveal>
       </div>
+
     </section>
   );
 }
