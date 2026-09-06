@@ -39,12 +39,16 @@ const LINES = [
   { word: "ENGINEER", baseline: HEAD.cap + HEAD.lead },
 ] as const;
 
-/** Displacement in user units at full tilt. The viewBox is 3026 wide. */
-const MAX_SCALE = 110;
+/**
+ * Displacement in user units at full tilt. The viewBox is 3026 wide, so this
+ * is roughly a 5% swell — enough that the letters visibly give way, while a
+ * hard flick of the mouse still leaves the words readable.
+ */
+const MAX_SCALE = 165;
 /** Below this the distortion is invisible, so the filter comes off entirely. */
 const OFF_SCALE = 0.12;
 /** How fast the field settles once the pointer stops moving. */
-const DECAY = 0.9;
+const DECAY = 0.93;
 /** How quickly the visible amount chases the target. */
 const EASE = 0.18;
 
@@ -86,7 +90,7 @@ export default function HeroHeadline() {
       lastT = now;
       if (!over) return;
       // px per ms, mapped into user units
-      target = Math.min((dist / dt) * 44, MAX_SCALE);
+      target = Math.min((dist / dt) * 105, MAX_SCALE);
     };
 
     const onEnter = () => {
