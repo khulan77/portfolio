@@ -25,7 +25,7 @@ const INTERACTIVE = "a, button, [data-cursor]";
 /** How hard the ring chases the dot. */
 const LAG = 0.18;
 
-/** Scrolling moves the page under a still pointer no faster than this needs. */
+/** How often the act under a still pointer is re-read. */
 const ACT_RECHECK_MS = 80;
 
 export default function Cursor() {
@@ -96,7 +96,6 @@ export default function Cursor() {
     const onEnterWindow = () => layer.classList.remove("is-out");
     const onLeaveWindow = () => layer.classList.add("is-out");
 
-    let lastScrollY = window.scrollY;
     let lastCheck = 0;
 
     const tick = () => {
@@ -105,16 +104,19 @@ export default function Cursor() {
       place(ring, ringX, ringY);
 
       /*
-       * The pointer also changes act by standing still while the page scrolls
-       * past it, and `mouseover` never fires for that. So while the page is
-       * moving, the act is re-read from the point under the cursor — a hit
-       * test a dozen times a second, not sixty.
+       * `mouseover` fires on crossing into a different element, which covers
+       * the pointer moving and nothing else. The ground under a still pointer
+       * changes too — the page scrolls past it, or the menu opens underneath
+       * it — and the cursor was left painting in the palette of an act it was
+       * no longer over: chalk's ink on the coal menu, which is no cursor at
+       * all. So the act is also re-read straight from the point under the
+       * pointer, a dozen times a second rather than sixty.
+       *
+       * This was conditioned on the scroll position having changed, which is
+       * exactly the test the open menu defeats: it locks the page.
        */
-      const scrollY = window.scrollY;
-      if (scrollY === lastScrollY) return;
       const now = performance.now();
       if (now - lastCheck < ACT_RECHECK_MS) return;
-      lastScrollY = scrollY;
       lastCheck = now;
       setAct(document.elementFromPoint(x, y));
     };
