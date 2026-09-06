@@ -44,7 +44,14 @@ const LINES = [
  * is roughly a 5% swell — enough that the letters visibly give way, while a
  * hard flick of the mouse still leaves the words readable.
  */
-const MAX_SCALE = 165;
+const MAX_SCALE = 210;
+/**
+ * What the field is worth the moment the pointer is over the words at all.
+ * Amplitude alone was not the problem — a still field only bulges the letters.
+ * A surface that is already moving before you push it is what reads as water.
+ * Held below the point where the O of SOFTWARE starts to read as a U.
+ */
+const IDLE_SWELL = 56;
 /** Below this the distortion is invisible, so the filter comes off entirely. */
 const OFF_SCALE = 0.12;
 /** How fast the field settles once the pointer stops moving. */
@@ -60,12 +67,14 @@ export default function HeroHeadline() {
   const svgRef = useRef<SVGSVGElement>(null);
   const groupRef = useRef<SVGGElement>(null);
   const mapRef = useRef<SVGFEDisplacementMapElement>(null);
+  const turbRef = useRef<SVGFETurbulenceElement>(null);
 
   useEffect(() => {
     const svg = svgRef.current;
     const group = groupRef.current;
     const map = mapRef.current;
-    if (!svg || !group || !map) return;
+    const turb = turbRef.current;
+    if (!svg || !group || !map || !turb) return;
 
     // No hover, a coarse pointer, or less motion asked for: no listeners, no
     // ticker callback, nothing to tear down. The headline just sits there.
@@ -89,12 +98,13 @@ export default function HeroHeadline() {
       lastY = event.clientY;
       lastT = now;
       if (!over) return;
-      // px per ms, mapped into user units
-      target = Math.min((dist / dt) * 105, MAX_SCALE);
+      // px per ms on top of the resting swell
+      target = Math.min(IDLE_SWELL + (dist / dt) * 105, MAX_SCALE);
     };
 
     const onEnter = () => {
       over = true;
+      target = IDLE_SWELL;
     };
     const onLeave = () => {
       over = false;
@@ -102,7 +112,9 @@ export default function HeroHeadline() {
     };
 
     const tick = () => {
-      target *= DECAY;
+      // While the pointer is over the words the surface never fully settles;
+      // it only falls back to its resting swell.
+      target = over ? Math.max(target * DECAY, IDLE_SWELL) : target * DECAY;
       current += (target - current) * EASE;
 
       if (current < OFF_SCALE) {
@@ -116,6 +128,14 @@ export default function HeroHeadline() {
         group.setAttribute("filter", `url(#${filterId})`);
         attached = true;
       }
+      // The field itself churns, slowly, so the distortion flows instead of
+      // sitting still and merely growing. One full cycle takes about ten
+      // seconds — far slower than anything that enters the page.
+      const t = performance.now() / 1000;
+      const fx = 0.0008 + Math.sin(t * 0.62) * 0.00028;
+      const fy = 0.0019 + Math.cos(t * 0.44) * 0.00075;
+      turb.setAttribute("baseFrequency", `${fx.toFixed(5)} ${fy.toFixed(5)}`);
+
       // written straight to the attribute — React state at 60fps would be
       // a render per frame for a number nothing else reads
       map.setAttribute("scale", current.toFixed(2));
@@ -155,6 +175,7 @@ export default function HeroHeadline() {
           colorInterpolationFilters="sRGB"
         >
           <feTurbulence
+            ref={turbRef}
             type="fractalNoise"
             baseFrequency="0.0008 0.0019"
             numOctaves={1}
