@@ -446,6 +446,21 @@ body {
    AMBIENT
    ============================================================ */
 
+/*
+ * The seal turns once every 48 seconds. A continuous loop has to be far
+ * slower than anything that enters the page — a fast one is the cheapest
+ * trick on the internet — and there is exactly one of these on the site.
+ */
+@keyframes seal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.seal {
+  transform-origin: 50% 50%;
+  animation: seal-spin 48s linear infinite;
+}
+
 @keyframes pulse-ring {
   0% { transform: scale(0.9); opacity: 0.8; }
   70% { transform: scale(1.8); opacity: 0; }
@@ -459,7 +474,8 @@ body {
    REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .pulse-ring { animation: none !important; }
+  .pulse-ring,
+  .seal { animation: none !important; }
   .btn:hover { transform: none; }
   * { scroll-behavior: auto !important; }
 }

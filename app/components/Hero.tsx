@@ -5,23 +5,10 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { E, T, armReveal, clearReveal } from "../lib/motion";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
 import HeroHeadline from "./HeroHeadline";
+import Seal from "./Seal";
 import Scene3D from "./Scene3D";
-import Magnetic from "./Magnetic";
 import { brand, links } from "../data/profile";
-import { metrics } from "../data/projects";
-
-/**
- * Two, not four. "Stack" and "Working" were repeated in full further down the
- * page — the Stack section lists all 37, About states the working languages —
- * so in the hero they were filling a corner rather than telling anyone
- * anything. Both numbers are counted from the data, never typed.
- */
-const FACTS = [
-  { k: "Shipped", v: `${metrics.shipped} projects` },
-  { k: "AI in production", v: `${metrics.withAi} of them` },
-];
 
 
 /**
@@ -78,7 +65,7 @@ export default function Hero() {
     <section
       ref={root}
       id="top"
-      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-8 pt-32"
+      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-6 pt-24"
     >
       <Scene3D />
       <div
@@ -108,46 +95,23 @@ export default function Hero() {
           </span>
         </h1>
 
-        <div className="mt-12 grid gap-10 border-t border-line pt-8 md:grid-cols-12">
-          <div className="hero-lead md:col-span-5">
-            <p className="display text-xl leading-tight md:text-2xl">
-              From idea to system<span className="text-signal">.</span>
-            </p>
-            <p className="mt-4 text-balance text-[0.9375rem] leading-relaxed text-ink-2">
-              {brand.statementMn} Судалгаанаас эхлээд интерфейс, API, өгөгдлийн
-              сан, AI давхарга, эцэст нь production хүртэлх бүх шатыг би өөрөө
-              хөтөлнө.
-            </p>
+        {/*
+          The paragraph, the two buttons and the four statistics all used to
+          sit here, under a headline that already fills the screen. They were
+          competing with it. What is left is the type, where the reader is, and
+          one way to act — the seal.
+        */}
+        <div className="mt-8 flex items-end justify-between gap-8 border-t border-line pt-5">
+          <div className="flex flex-col gap-1">
+            <span className="label">Улаанбаатар</span>
+            <span className="label">Алсын зайд нээлттэй</span>
           </div>
 
-          <div className="hero-cta flex flex-wrap items-start gap-3 md:col-span-4">
-            <Magnetic>
-              <a href="#work" className="btn btn-signal group">
-                View my work
-                <ArrowDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" />
-              </a>
-            </Magnetic>
-            <Magnetic strength={0.3}>
-              <a href="#contact" className="btn btn-line group">
-                Let&apos;s build something
-                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </a>
-            </Magnetic>
-          </div>
-
-          {/* machine-readable facts — every number is counted, never claimed */}
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-4 md:col-span-3">
-            {FACTS.map((fact) => (
-              <div key={fact.k} className="hero-fact">
-                <dt className="label">{fact.k}</dt>
-                <dd className="mono mt-1 text-xs text-ink">{fact.v}</dd>
-              </div>
-            ))}
-          </dl>
+          <Seal className="h-24 w-24 shrink-0 md:h-32 md:w-32" />
         </div>
       </motion.div>
 
-      <div className="shell mt-10 flex items-center justify-between">
+      <div className="shell mt-6 flex items-center justify-between">
         <span className="label">Scroll</span>
         <a
           href={links.emailHref}
