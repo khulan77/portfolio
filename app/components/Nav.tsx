@@ -158,32 +158,13 @@ export default function Nav() {
         const falloff = Math.max(0, 1 - dist / RADIUS);
         x(gsap.utils.clamp(-CAP, CAP, dx * PULL * falloff));
         y(gsap.utils.clamp(-CAP, CAP, dy * PULL * falloff));
-
-        /*
-         * The same pass reports how close the pointer is, which is what lets
-         * the menu button start filling while the pointer is still on its way
-         * to it. Squared, so it stays quiet across most of the radius and
-         * arrives over the last of it rather than tracking the whole distance
-         * linearly; pinned to 1 inside the element, so the fill is complete
-         * everywhere on the button and not only over its centre.
-         */
-        const inside =
-          event.clientX >= r.left &&
-          event.clientX <= r.right &&
-          event.clientY >= r.top &&
-          event.clientY <= r.bottom;
-        el.style.setProperty(
-          "--near",
-          inside ? "1" : (falloff * falloff).toFixed(3),
-        );
       }
     };
 
     const onLeave = () => {
-      for (const { el, x, y } of setters) {
+      for (const { x, y } of setters) {
         x(0);
         y(0);
-        el.style.setProperty("--near", "0");
       }
     };
 
@@ -192,10 +173,7 @@ export default function Nav() {
     return () => {
       bar.removeEventListener("pointermove", onMove);
       bar.removeEventListener("pointerleave", onLeave);
-      for (const { el } of setters) {
-        gsap.set(el, { x: 0, y: 0 });
-        el.style.removeProperty("--near");
-      }
+      for (const { el } of setters) gsap.set(el, { x: 0, y: 0 });
     };
   }, []);
 
@@ -351,35 +329,32 @@ export default function Nav() {
             })}
           </nav>
 
-          {/*
-            The button carried no accessible name at all: its only content was
-            an aria-hidden span and an empty conditional string.
-          */}
           <button
             ref={triggerRef}
             type="button"
-            data-magnetic
             onClick={() => {
               if (!open) setPanelShowing(true);
               setOpen((v) => !v);
             }}
             aria-expanded={open}
             aria-controls="site-menu"
+            /* Its only content is an aria-hidden span, so without this the
+               button reaches a screen reader with no name at all. */
             aria-label={open ? "Close menu" : "Open menu"}
-            className="menu-orb"
+            className="label flex h-9 items-center gap-2.5 border border-line px-3 text-ink transition-colors hover:border-line-strong"
           >
-            <span
-              aria-hidden
-              className={`menu-orb-bar ${
-                open ? "translate-y-[2px] rotate-45" : ""
-              }`}
-            />
-            <span
-              aria-hidden
-              className={`menu-orb-bar ${
-                open ? "-translate-y-[2px] -rotate-45" : ""
-              }`}
-            />
+            <span aria-hidden className="flex flex-col gap-[3px]">
+              <span
+                className={`block h-px w-3.5 bg-current transition-transform duration-300 ${
+                  open ? "translate-y-[2px] rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`block h-px w-3.5 bg-current transition-transform duration-300 ${
+                  open ? "-translate-y-[2px] -rotate-45" : ""
+                }`}
+              />
+            </span>
           </button>
         </div>
       </div>
