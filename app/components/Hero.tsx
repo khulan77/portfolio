@@ -171,7 +171,9 @@ export default function Hero() {
 
           <div className="flex flex-col items-center gap-2">
             <Seal className="h-[4.5rem] w-[4.5rem] shrink-0 md:h-20 md:w-20" />
-            <span className="label whitespace-nowrap">Улаанбаатар</span>
+            {/* A corner label, so it follows the site's rule: English for
+                structure, Mongolian for the narrative copy. */}
+            <span className="label whitespace-nowrap">Ulaanbaatar</span>
           </div>
         </div>
       </section>
