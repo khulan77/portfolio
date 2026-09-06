@@ -28,6 +28,27 @@ export default function Seal({ className = "" }: { className?: string }) {
       aria-label="Ажилд нээлттэй — холбоо барих"
     >
       <svg viewBox="0 0 200 200" className="seal h-full w-full" aria-hidden>
+        {/*
+          A hairline outside the ring text, at r=93 — the text sits on r=72 and
+          its caps reach about 82, so the line clears them without crowding.
+
+          The stroke does not scale, so it is one device pixel wherever the seal
+          is set: the same weight as every other rule on the page, rather than a
+          line that thins away as the mark shrinks. Drawn in currentColor, so it
+          brightens with the text on hover instead of carrying a hover rule of
+          its own, and follows the act's palette for free.
+        */}
+        <circle
+          cx="100"
+          cy="100"
+          r="93"
+          fill="none"
+          stroke="currentColor"
+          strokeOpacity="0.3"
+          strokeWidth="1"
+          vectorEffect="non-scaling-stroke"
+        />
+
         <defs>
           <path
             id={pathId}
@@ -49,7 +70,7 @@ export default function Seal({ className = "" }: { className?: string }) {
 
       <ArrowUpRight
         aria-hidden
-        className="absolute h-5 w-5 text-ink transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        className="absolute h-4 w-4 text-ink transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
       />
     </a>
   );

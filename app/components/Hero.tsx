@@ -170,7 +170,7 @@ export default function Hero() {
           </a>
 
           <div className="flex flex-col items-center gap-2">
-            <Seal className="h-20 w-20 shrink-0 md:h-24 md:w-24" />
+            <Seal className="h-[4.5rem] w-[4.5rem] shrink-0 md:h-20 md:w-20" />
             <span className="label whitespace-nowrap">Улаанбаатар</span>
           </div>
         </div>
