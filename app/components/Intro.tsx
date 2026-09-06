@@ -94,7 +94,6 @@ export default function Intro() {
         onComplete: () => {
           document.body.style.overflow = previousOverflow;
           setGone(true);
-          announce();
         },
       });
 
@@ -171,7 +170,9 @@ export default function Intro() {
           tl.pause();
         },
         undefined,
-        "+=" + T.fast,
+        // One keystroke's worth of rest: long enough for the finished word to
+        // register, short enough not to become a wait.
+        "+=" + T.stagger * 2,
       );
 
       tl.to(root.current, {
@@ -179,6 +180,17 @@ export default function Intro() {
         duration: T.base,
         ease: E.snap,
       });
+
+      /*
+       * The hero is told to start while the panel is still clearing it.
+       *
+       * Announcing on the timeline's own completion put the two movements end
+       * to end — 0.7s of panel, then 1.1s of headline, and in between a beat
+       * of empty hero. E.snap is expo, so by this point the panel has already
+       * travelled most of its distance: the headline rises into the last of
+       * it, and what the reader sees is one movement rather than a handover.
+       */
+      tl.call(announce, undefined, "-=" + T.base * 0.7);
 
       return () => {
         document.body.style.overflow = previousOverflow;
