@@ -450,6 +450,77 @@ body {
 }
 
 /* ============================================================
+   MENU ORB
+   ============================================================ */
+/*
+ * The button answers a movement that is still on its way: it fills as the
+ * pointer comes toward it rather than at the moment the pointer lands. --near
+ * is written by the bar's own pointer pass — 0 at the edge of its radius, 1
+ * once the pointer is on the button — and the :hover rule below is the
+ * fallback for when that pass does not run at all, under reduced motion.
+ *
+ * Nothing here is a new colour. The fill is the act's ink and the strokes
+ * cross to the act's ground as it arrives, so the button inverts rather than
+ * lighting up.
+ */
+.menu-orb {
+  --near: 0;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  gap: 3px;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 9999px;
+}
+.menu-orb::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--ink);
+  opacity: var(--near);
+  /* Grows into place as it arrives, so the fill lands rather than fades. */
+  transform: scale(calc(0.72 + 0.28 * var(--near)));
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/*
+ * The strokes cross from the ink to the ground in step with the fill under
+ * them, so they are two layers rather than one colour: the ink underneath and
+ * the ground fading in over it.
+ *
+ * They were one `color-mix` with a calc percentage, which the build's CSS
+ * minifier does not carry through — it dropped the mix and left the strokes
+ * flat `var(--bg)`, i.e. the ground drawn on the ground, invisible at rest.
+ */
+.menu-orb-bar {
+  position: relative;
+  display: block;
+  width: 0.875rem;
+  height: 1px;
+  background: var(--ink);
+  transition: transform 0.3s ease;
+}
+.menu-orb-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  opacity: var(--near);
+  transition: opacity 0.25s ease;
+}
+
+@media (hover: hover) {
+  .menu-orb:hover {
+    --near: 1;
+  }
+}
+
+/* ============================================================
    SPOTLIGHT — the rim tracks the pointer
    ============================================================ */
 .spotlight {
