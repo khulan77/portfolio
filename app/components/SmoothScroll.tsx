@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { T } from "../lib/motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,13 +17,15 @@ export default function SmoothScroll() {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    if (prefersReduced) return;
+    // Touch already has momentum scrolling of its own; a second smoothing
+    // layer on top of it fights the gesture rather than helping it.
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    if (prefersReduced || coarse) return;
 
     const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      lerp: 0.1,
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      syncTouch: false,
     });
 
     lenis.on("scroll", ScrollTrigger.update);
@@ -42,7 +45,7 @@ export default function SmoothScroll() {
       const el = document.querySelector(id);
       if (!el) return;
       e.preventDefault();
-      lenis.scrollTo(el as HTMLElement, { offset: -80, duration: 1.4 });
+      lenis.scrollTo(el as HTMLElement, { offset: -80, duration: T.slow });
     };
     document.addEventListener("click", onClick);
 

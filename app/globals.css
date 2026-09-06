@@ -317,19 +317,23 @@ body {
   color: var(--on-accent);
   box-shadow: var(--shadow-signal);
 }
-.btn-signal:hover {
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .btn-signal:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .btn-line {
   border-color: var(--hairline-strong);
   color: var(--ink);
 }
-.btn-line:hover {
-  background: var(--ink);
-  color: var(--bg);
-  border-color: var(--ink);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .btn-line:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
 }
 
 /* filter chips */
@@ -342,9 +346,11 @@ body {
   color: var(--ink-faint);
   transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
 }
-.chip:hover {
-  color: var(--ink);
-  border-color: var(--hairline-strong);
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--ink);
+    border-color: var(--hairline-strong);
+  }
 }
 .chip[data-active="true"] {
   background: var(--ink);
@@ -391,9 +397,13 @@ body {
   opacity: 0;
   transition: opacity 0.45s ease;
 }
-.spotlight:hover::before,
-.spotlight:hover::after {
-  opacity: 1;
+/* A touch device has no hover: without the guard the rim latches on
+   after a tap and stays lit. */
+@media (hover: hover) {
+  .spotlight:hover::before,
+  .spotlight:hover::after {
+    opacity: 1;
+  }
 }
 
 /* ============================================================
@@ -459,4 +469,6 @@ body {
   border: 3px solid var(--bg);
   border-radius: 9999px;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+@media (hover: hover) {
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+}

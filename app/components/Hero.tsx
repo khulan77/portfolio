@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
+import { E, T, armReveal, clearReveal } from "../lib/motion";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import Scene3D from "./Scene3D";
@@ -29,24 +30,27 @@ export default function Hero() {
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-      tl.from(".hero-status", { opacity: 0, y: 14, duration: 0.7 })
-        .from(
-          ".hero-line > span",
-          { yPercent: 115, duration: 1.1, stagger: 0.1 },
-          "-=0.35",
-        )
-        .from(".hero-lead", { opacity: 0, y: 20, duration: 0.8 }, "-=0.65")
-        .from(
-          ".hero-cta > *",
-          { opacity: 0, y: 16, duration: 0.6, stagger: 0.09 },
-          "-=0.5",
-        )
-        .from(
-          ".hero-fact",
-          { opacity: 0, y: 14, duration: 0.6, stagger: 0.07 },
-          "-=0.4",
-        );
+      const mm = gsap.matchMedia();
+
+      /*
+       * One movement on load, finished inside 1.2s. The hero used to
+       * choreograph five groups in sequence, which meant the reader was still
+       * being animated at while trying to read. The headline lifts; nothing
+       * else does.
+       */
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const lines = gsap.utils.toArray<HTMLElement>(".hero-line > span");
+        armReveal(lines);
+        gsap.from(lines, {
+          yPercent: 108,
+          duration: T.slow,
+          ease: E.out,
+          stagger: T.stagger,
+          onComplete: () => clearReveal(lines),
+        });
+      });
+
+      return () => mm.revert();
     },
     { scope: root },
   );

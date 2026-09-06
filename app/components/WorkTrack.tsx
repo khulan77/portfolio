@@ -10,6 +10,7 @@ import BrowserFrame from "./BrowserFrame";
 import ProjectShot from "./ProjectShot";
 import { useSpotlight } from "../lib/use-spotlight";
 import { useMediaQuery } from "../lib/media";
+import { E, T } from "../lib/motion";
 import { homeProjects, type Project } from "../data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -139,12 +140,14 @@ export default function WorkTrack() {
     () => {
       const el = track.current;
       const barEl = bar.current;
+      // `pinned` is false under prefers-reduced-motion and on coarse pointers,
+      // so this whole block is the no-preference branch already.
       if (!pinned || !el || !barEl) return;
 
       const cards = gsap.utils.toArray<HTMLElement>(".track-card", el);
       const skewTo = gsap.quickTo(cards, "skewX", {
-        duration: 0.5,
-        ease: "power3",
+        duration: T.base,
+        ease: E.out,
       });
       const distance = () => Math.max(el.scrollWidth - window.innerWidth + 80, 0);
 

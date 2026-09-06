@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import Mark from "./Mark";
+import { EASE, T } from "../lib/motion";
 import { activeSocials } from "../data/profile";
 
 const NAV_ITEMS = [
@@ -82,7 +83,7 @@ export default function Nav() {
     <motion.header
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+      transition={{ duration: T.base, ease: EASE.out, delay: T.stagger * 2 }}
       className="fixed inset-x-0 top-0 z-50"
     >
       <div
@@ -162,7 +163,7 @@ export default function Nav() {
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+            transition={{ duration: T.base, ease: EASE.snap }}
             className="fixed inset-0 top-0 -z-10 flex flex-col justify-between bg-bg pt-24 pb-8"
           >
             <div className="blueprint pointer-events-none absolute inset-0 opacity-60" />
@@ -177,7 +178,7 @@ export default function Nav() {
                   onClick={() => setOpen(false)}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.12 + i * 0.045, duration: 0.5 }}
+                  transition={{ delay: T.stagger + i * T.stagger, duration: T.base }}
                   className="group flex items-baseline gap-5 border-b border-line py-4 md:py-5"
                 >
                   <span className="display text-3xl transition-transform duration-500 group-hover:translate-x-2 md:text-5xl">

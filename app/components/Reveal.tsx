@@ -4,52 +4,86 @@ import { useRef, type ReactNode } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  E,
+  REVEAL_FROM,
+  REVEAL_START,
+  T,
+  armReveal,
+  clearReveal,
+} from "../lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  /** delay in seconds */
-  delay?: number;
-  /** px travelled on the y axis */
-  y?: number;
-  /** stagger direct children instead of animating as one block */
+  /** Stagger the direct children instead of moving the block as one. */
   stagger?: boolean;
 };
 
 /**
- * Fades + lifts content into view once, driven by GSAP ScrollTrigger.
- * With `stagger`, its direct children animate one after another.
+ * The only entrance on the site.
+ *
+ * Everything is inside a `gsap.matchMedia()` query, so a visitor who has asked
+ * their system for less motion gets no tween created at all. That is why the
+ * animation is written with `gsap.from` rather than `fromTo` or a CSS starting
+ * state: with no tween, the markup is already in its final state and nothing
+ * is left stranded at `opacity: 0`.
+ *
+ * A staggered list is handed to `ScrollTrigger.batch`, which watches the whole
+ * group with one observer and animates whatever entered together — rather than
+ * building a separate ScrollTrigger for every row.
  */
 export default function Reveal({
   children,
   className = "",
-  delay = 0,
-  y = 28,
   stagger = false,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      const el = ref.current!;
-      const targets = stagger ? Array.from(el.children) : el;
-      gsap.from(targets, {
-        opacity: 0,
-        y,
-        duration: 0.9,
-        delay,
-        ease: "power3.out",
-        stagger: stagger ? 0.08 : 0,
-        scrollTrigger: {
-          trigger: el,
-          start: "top 85%",
-          once: true,
-        },
+      const el = ref.current;
+      if (!el) return;
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        if (stagger) {
+          const items = Array.from(el.children);
+          if (!items.length) return;
+
+          ScrollTrigger.batch(items, {
+            start: REVEAL_START,
+            once: true,
+            onEnter: (batch) => {
+              armReveal(batch);
+              gsap.from(batch, {
+                ...REVEAL_FROM,
+                duration: T.base,
+                ease: E.out,
+                stagger: T.stagger,
+                onComplete: () => clearReveal(batch),
+              });
+            },
+          });
+          return;
+        }
+
+        armReveal(el);
+        gsap.from(el, {
+          ...REVEAL_FROM,
+          duration: T.base,
+          ease: E.out,
+          scrollTrigger: { trigger: el, start: REVEAL_START, once: true },
+          onComplete: () => clearReveal(el),
+        });
       });
+
+      return () => mm.revert();
     },
-    { scope: ref }
+    { scope: ref, dependencies: [stagger] },
   );
 
   return (

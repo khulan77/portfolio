@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { E, T } from "../lib/motion";
 import { ArrowUpRight } from "lucide-react";
 import Magnetic from "./Magnetic";
 import Mark from "./Mark";
@@ -16,13 +17,20 @@ export default function Contact() {
 
   useGSAP(
     () => {
-      gsap.from(".contact-line > span", {
-        yPercent: 110,
-        duration: 1.1,
-        ease: "power4.out",
-        stagger: 0.09,
-        scrollTrigger: { trigger: root.current, start: "top 75%", once: true },
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const lines = gsap.utils.toArray<HTMLElement>(".contact-line > span");
+        gsap.from(lines, {
+          yPercent: 108,
+          duration: T.slow,
+          ease: E.out,
+          stagger: T.stagger,
+          scrollTrigger: { trigger: root.current, start: "top 75%", once: true },
+        });
       });
+
+      return () => mm.revert();
     },
     { scope: root },
   );
